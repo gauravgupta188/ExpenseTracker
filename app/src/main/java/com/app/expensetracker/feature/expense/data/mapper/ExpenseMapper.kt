@@ -1,0 +1,34 @@
+package com.app.expensetracker.feature.expense.data.mapper
+
+import com.app.expensetracker.feature.expense.domain.model.Expense
+import com.app.expensetracker.feature.expense.data.model.ExpenseDto
+import com.google.firebase.Timestamp
+import java.time.ZoneId
+
+fun Expense.toDto(): ExpenseDto =
+    ExpenseDto(
+        title = title,
+        amount = amount,
+        category = category,
+        note = note,
+        paymentMode = paymentMode,
+        date = Timestamp(date.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+        month = month,
+        year = year
+    )
+
+fun ExpenseDto.toDomain(id: String): Expense =
+    Expense(
+        id = id,
+        title = title,
+        amount = amount,
+        category = category,
+        note = note,
+        paymentMode = paymentMode,
+        date = date.toDate()
+            .toInstant()
+            .atZone(ZoneId.systemDefault())
+            .toLocalDate(),
+        month = month,
+        year = year
+    )

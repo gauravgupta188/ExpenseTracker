@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">ExpenseTracker</string>
+    <string name="logo_content_description">Logo Description</string>
+    <string name="default_web_client_id">1056789961354-tsrg2g5a6jggg9qmfb9p8fajb8nq0odi.apps.googleusercontent.com</string>
+</resources>

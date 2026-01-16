@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.ExpenseTracker.Splash" parent="Theme.SplashScreen">
+
+        <!-- Background color -->
+        <item name="windowSplashScreenBackground">@color/splash_background</item>
+
+        <!-- App icon (centered) -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_logo</item>
+
+        <!-- Icon background (optional) -->
+        <item name="windowSplashScreenIconBackgroundColor">@color/splash_background</item>
+
+        <!-- Theme after splash -->
+        <item name="postSplashScreenTheme">@style/Theme.ExpenseTracker</item>
+
+    </style>
+
+    <style name="Theme.ExpenseTracker" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
