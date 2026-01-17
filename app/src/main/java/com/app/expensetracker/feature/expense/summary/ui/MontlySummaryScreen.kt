@@ -1,9 +1,12 @@
 package com.app.expensetracker.feature.expense.summary.ui
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
@@ -27,6 +30,7 @@ import com.app.expensetracker.feature.expense.summary.ui.component.SpendingInsig
 import com.app.expensetracker.feature.expense.summary.ui.component.SummaryCards
 import com.app.expensetracker.feature.expense.summary.ui.component.SummaryHeader
 import com.app.expensetracker.feature.expense.summary.ui.component.SummaryStatsSection
+import com.app.expensetracker.ui.theme.BrandBlack
 
 @Composable
 fun MonthlySummaryScreen(
@@ -37,26 +41,13 @@ fun MonthlySummaryScreen(
     onViewAllCategoriesClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Scaffold(
-        modifier = modifier.fillMaxSize(),
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddExpenseClick,
-                containerColor = MaterialTheme.colorScheme.primary,
-                shape = CircleShape
-            ) {
-                Icon(
-                    imageVector = Icons.Default.Add,
-                    contentDescription = "Add Expense",
-                    tint = Color.White
-                )
-            }
-        }
-    ) { padding ->
+    Box(
+        modifier.fillMaxSize().background(Color.Black)
+            .navigationBarsPadding().statusBarsPadding()
+    ) {
 
         LazyColumn(
             modifier = Modifier
-                .padding(padding)
                 .fillMaxSize()
         ) {
 
@@ -66,7 +57,7 @@ fun MonthlySummaryScreen(
                     selectedMonth = state.selectedMonth,
                     onBackClick = onBackClick,
                     onMonthClick = onMonthSelectorClick,
-                    subtitle = state.insightMessage,
+                    subtitle = "Your spending performance is 8% lower than last month",
 
                 )
             }

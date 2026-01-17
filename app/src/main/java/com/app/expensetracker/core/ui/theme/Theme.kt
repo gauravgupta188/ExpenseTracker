@@ -79,11 +79,14 @@ fun ExpenseTrackerTheme(
 
 
             // ✅ Make system bars transparent (NOT deprecated)
-           // window.statusBarColor = android.graphics.Color.TRANSPARENT
+            window.statusBarColor = android.graphics.Color.TRANSPARENT
 
             // White status bar icons
             WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = false
+                .isAppearanceLightStatusBars = darkTheme
+
+
+
         }
     }
 

@@ -1,7 +1,11 @@
 package com.app.expensetracker.feature.expense.addexpense.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -11,22 +15,28 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppScaffold
+import com.app.expensetracker.core.components.AppTopBar
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEffect
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEvent
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiState
 import com.app.expensetracker.feature.expense.addexpense.ui.component.AmountInput
 import com.app.expensetracker.feature.expense.addexpense.ui.component.CategorySelector
 import com.app.expensetracker.feature.expense.addexpense.ui.component.NoteInput
+import com.app.expensetracker.ui.theme.BrandBlack
 import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -50,37 +60,35 @@ fun AddExpenseScreen(
         }
     }
 
-    Scaffold(
+    AppScaffold(
         topBar = {
-            TopAppBar(
-                title = { Text("Add Expense") },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Default.ArrowBack, null)
-                    }
-                }
-            )
+            AppTopBar(title = "Add Expense",onBackClick = onBack)
         },
-        snackbarHost = { SnackbarHost(snackbarHostState) },
+        snackbarHostState = snackbarHostState,
         bottomBar = {
-            Button(
-                onClick = {
-                    onEvent(AddExpenseUiEvent.SaveClicked)
-                },
-                enabled = !uiState.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-                    .height(56.dp)
-            ) {
-                Text("Save Expense")
+
+            Box(modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {
+                Button(
+                    onClick = {
+                        onEvent(AddExpenseUiEvent.SaveClicked)
+                    },
+                    enabled = !uiState.isLoading,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .height(56.dp)
+                ) {
+                    Text("Save Expense")
+                }
             }
         }
     ) { padding ->
 
         Column(
             modifier = Modifier
+                .fillMaxSize()
                 .padding(padding)
+                .background(color = MaterialTheme.colorScheme.onPrimary)
                 .padding(16.dp)
         ) {
 

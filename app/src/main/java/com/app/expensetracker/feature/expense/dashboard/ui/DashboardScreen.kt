@@ -16,6 +16,7 @@ import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
 import com.app.expensetracker.feature.expense.dashboard.ui.component.AddExpenseFab
 import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardExpenseSection
 import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardTopSection
+import com.app.expensetracker.ui.theme.BrandBlack
 
 @Composable
 fun DashboardScreen(
@@ -27,7 +28,7 @@ fun DashboardScreen(
 ) {
     Box(modifier = modifier
         .fillMaxSize()
-        .background(Color.Black)
+        .background(BrandBlack)
         .navigationBarsPadding()) {
 
         Column(modifier = Modifier

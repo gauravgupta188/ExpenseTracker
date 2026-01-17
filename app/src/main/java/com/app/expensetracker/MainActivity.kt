@@ -28,6 +28,7 @@ class MainActivity : ComponentActivity() {
 
         val splashScreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
         splashScreen.setKeepOnScreenCondition {
             !isAppReady
         }
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
             delay(1200) // simulate loading
             isAppReady = true
         }
-        enableEdgeToEdge()
+
         setContent {
           InitApp()
         }
@@ -50,6 +51,7 @@ fun InitApp() {
     val appStartViewModel: AppStartViewModel = hiltViewModel()
     val isFirebaseLoggedIn = appStartViewModel.isLoggedIn
         .collectAsState().value
+
 
     ExpenseTrackerTheme(
         darkTheme = isDarkTheme

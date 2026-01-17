@@ -13,7 +13,7 @@ data class MonthlySummaryUiState(
     val spendingChangePercent: Int = 0,
     val isSpendingDown: Boolean = true,
 
-    val insightMessage: String = "",
+    val insightMessage: String = "You saved $200 more on groceries this month",
 
     val categories: List<CategorySummaryUiModel> = emptyList(),
 
