@@ -65,6 +65,7 @@ fun AddExpenseScreen(
             AppTopBar(title = "Add Expense",onBackClick = onBack)
         },
         snackbarHostState = snackbarHostState,
+
         bottomBar = {
 
             Box(modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {

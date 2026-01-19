@@ -2,6 +2,7 @@ package com.app.expensetracker.feature.expense.data.mapper
 
 import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.data.model.ExpenseDto
+import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.google.firebase.Timestamp
 import java.time.ZoneId
 
@@ -9,7 +10,7 @@ fun Expense.toDto(): ExpenseDto =
     ExpenseDto(
         title = title,
         amount = amount,
-        category = category,
+        category = category.value,
         note = note,
         paymentMode = paymentMode,
         date = Timestamp(date.atStartOfDay(ZoneId.systemDefault()).toInstant()),
@@ -22,7 +23,7 @@ fun ExpenseDto.toDomain(id: String): Expense =
         id = id,
         title = title,
         amount = amount,
-        category = category,
+        category = ExpenseCategory.fromValue(category),
         note = note,
         paymentMode = paymentMode,
         date = date.toDate()

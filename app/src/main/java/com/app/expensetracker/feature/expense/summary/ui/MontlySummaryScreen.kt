@@ -23,14 +23,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppScaffold
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
 import com.app.expensetracker.feature.expense.summary.ui.component.CategoryBreakdownHeader
 import com.app.expensetracker.feature.expense.summary.ui.component.CategoryBreakdownItem
 import com.app.expensetracker.feature.expense.summary.ui.component.SpendingInsightCard
-import com.app.expensetracker.feature.expense.summary.ui.component.SummaryCards
 import com.app.expensetracker.feature.expense.summary.ui.component.SummaryHeader
 import com.app.expensetracker.feature.expense.summary.ui.component.SummaryStatsSection
-import com.app.expensetracker.ui.theme.BrandBlack
 
 @Composable
 fun MonthlySummaryScreen(
@@ -39,16 +38,21 @@ fun MonthlySummaryScreen(
     onMonthSelectorClick: () -> Unit,
     onAddExpenseClick: () -> Unit,
     onViewAllCategoriesClick: () -> Unit,
-    modifier: Modifier = Modifier
 ) {
-    Box(
-        modifier.fillMaxSize().background(Color.Black)
-            .navigationBarsPadding().statusBarsPadding()
-    ) {
-
+    AppScaffold(
+      /*  floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddExpenseClick,
+                containerColor = MaterialTheme.colorScheme.primary,
+                shape = CircleShape
+            ) {
+                Icon(Icons.Default.Add, contentDescription = null, tint = Color.White)
+            }
+        }*/
+    ) { padding ->
         LazyColumn(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxSize().background(MaterialTheme.colorScheme.background).padding(padding)
         ) {
 
             /* ---------- HEADER ---------- */
@@ -59,7 +63,7 @@ fun MonthlySummaryScreen(
                     onMonthClick = onMonthSelectorClick,
                     subtitle = "Your spending performance is 8% lower than last month",
 
-                )
+                    )
             }
 
             /* ---------- STATS ---------- */
@@ -127,3 +131,4 @@ fun MonthlySummaryScreen(
         }
     }
 }
+

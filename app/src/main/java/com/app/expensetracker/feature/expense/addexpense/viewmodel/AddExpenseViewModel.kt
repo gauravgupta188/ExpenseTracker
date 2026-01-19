@@ -69,9 +69,9 @@ class AddExpenseViewModel @Inject constructor(
             runCatching {
                 addExpenseUseCase(
                     Expense(
-                        title = state.selectedCategory.displayName,
+                        title = state.selectedCategory.value,
                         amount = amount,
-                        category = state.selectedCategory.name,
+                        category = state.selectedCategory,
                         note = state.note,
                         paymentMode = "UNKNOWN",
                         date = state.selectedDate,

@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.summary.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
+import com.app.expensetracker.feature.expense.domain.usecase.GetMonthlySummaryUseCase
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEffect
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEvent
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
@@ -16,7 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MonthlySummaryViewModel @Inject constructor(
-    // later: GetMonthlySummaryUseCase
+    private val getMonthlySummaryUseCase : GetMonthlySummaryUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(

@@ -123,7 +123,7 @@ fun AppNavGraph(
         }
         // -------- MAIN --------
         navigation(
-            startDestination = Routes.AddExpense.route,
+            startDestination = Routes.Home.route,
             route = Routes.MainRoot.route,
         ) {
             composable(Routes.Home.route) {

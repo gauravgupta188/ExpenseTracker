@@ -62,7 +62,7 @@ fun CategoryItem(
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = category.displayName,
+            text = category.value,
             style = MaterialTheme.typography.bodyMedium
         )
     }

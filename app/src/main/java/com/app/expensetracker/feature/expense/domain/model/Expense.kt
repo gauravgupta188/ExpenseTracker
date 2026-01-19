@@ -10,7 +10,7 @@ data class Expense(
     val id: String = "",
     val title: String,
     val amount: Double,
-    val category: String,
+    val category: ExpenseCategory,
     val note: String?,
     val paymentMode: String,
     val date: LocalDate,

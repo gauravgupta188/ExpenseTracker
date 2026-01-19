@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.summary.ui.component
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -38,8 +40,13 @@ fun SummaryHeader(
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth().statusBarsPadding()
-            .background(BrandBlack, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp))
+            .fillMaxWidth()
+            .background(
+                BrandBlack, shape = RoundedCornerShape(bottomStart = 32.dp, bottomEnd = 32.dp)
+
+            )
+            .statusBarsPadding()
+            .padding(16.dp)
 
     ) {
 
@@ -56,9 +63,9 @@ fun SummaryHeader(
 
             Spacer(modifier = Modifier.weight(1f))
 
-            OutlinedButton(onClick = onMonthClick) {
+            OutlinedButton(onClick = onMonthClick, border = BorderStroke(1.dp, Color.Gray)) {
                 Text(
-                    text = selectedMonth.label,
+                    text = "${selectedMonth.label} ${selectedMonth.year}",
                     color = Color.White
                 )
                 Icon(
@@ -67,9 +74,19 @@ fun SummaryHeader(
                     tint = Color.White
                 )
             }
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(onClick = {
+                //TODO
+             }) {
+                Icon(
+                    imageVector = Icons.Default.Share,
+                    contentDescription = "Share",
+                    tint = Color.White
+                )
+            }
         }
 
-        Spacer(modifier = Modifier.height(16.dp))
+        Spacer(modifier = Modifier.height(32.dp))
 
         Text(
             text = "Monthly Summary",
@@ -85,5 +102,6 @@ fun SummaryHeader(
                 color = Color.Gray
             )
         }
+        Spacer(modifier = Modifier.height(32.dp))
     }
 }

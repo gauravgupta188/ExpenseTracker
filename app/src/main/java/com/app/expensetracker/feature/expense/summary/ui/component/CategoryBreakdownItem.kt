@@ -37,7 +37,7 @@ fun CategoryBreakdownItem(
 
             Column {
                 Text(
-                    text = model.category.displayName,
+                    text = model.category.value,
                     style = MaterialTheme.typography.titleMedium
                 )
 

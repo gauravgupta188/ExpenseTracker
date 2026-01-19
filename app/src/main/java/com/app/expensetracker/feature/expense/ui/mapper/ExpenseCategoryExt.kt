@@ -1,6 +1,8 @@
 package com.app.expensetracker.feature.expense.ui.mapper
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.CarRental
+import androidx.compose.material.icons.filled.DevicesOther
 import androidx.compose.material.icons.filled.DirectionsCar
 import androidx.compose.material.icons.filled.Receipt
 import androidx.compose.material.icons.filled.Restaurant
@@ -16,4 +18,6 @@ fun ExpenseCategory.icon(): ImageVector =
         ExpenseCategory.TRANSPORT -> Icons.Default.DirectionsCar
         ExpenseCategory.BILLS -> Icons.Default.Receipt
         ExpenseCategory.SHOPPING -> Icons.Default.ShoppingBag
+        ExpenseCategory.RENT -> Icons.Default.CarRental
+        ExpenseCategory.OTHER -> Icons.Default.DevicesOther
     }
