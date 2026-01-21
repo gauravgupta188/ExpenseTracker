@@ -9,6 +9,7 @@ data class AddExpenseUiState(
     val selectedCategory: ExpenseCategory? = null,
     val selectedDate: LocalDateTime = LocalDateTime.now(),
     val note: String = "",
+    val isCategorySheetVisible: Boolean = false,
 
     val isLoading: Boolean = false,
     val errorMessage: String? = null

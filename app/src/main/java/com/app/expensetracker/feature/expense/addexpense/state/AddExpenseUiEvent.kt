@@ -1,6 +1,7 @@
 package com.app.expensetracker.feature.expense.addexpense.state
 
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
+import java.time.LocalDateTime
 
 sealed interface AddExpenseUiEvent {
 
@@ -9,4 +10,11 @@ sealed interface AddExpenseUiEvent {
     data class NoteChanged(val value: String) : AddExpenseUiEvent
 
     object SaveClicked : AddExpenseUiEvent
+    object DateClicked : AddExpenseUiEvent
+    data class DateSelected(val date: LocalDateTime) : AddExpenseUiEvent
+
+    object SeeAllCategoriesClicked : AddExpenseUiEvent
+    object CloseCategorySheet : AddExpenseUiEvent
+
 }
+

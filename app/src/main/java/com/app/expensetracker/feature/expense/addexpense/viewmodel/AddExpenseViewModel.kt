@@ -36,11 +36,36 @@ class AddExpenseViewModel @Inject constructor(
             is AddExpenseUiEvent.CategorySelected ->
                 _uiState.update { it.copy(selectedCategory = event.category) }
 
+            AddExpenseUiEvent.SeeAllCategoriesClicked -> {
+                _uiState.update {
+                    it.copy(isCategorySheetVisible = true)
+                }
+            }
+
+            AddExpenseUiEvent.CloseCategorySheet -> {
+                _uiState.update {
+                    it.copy(isCategorySheetVisible = false)
+                }
+            }
+
             is AddExpenseUiEvent.NoteChanged ->
                 _uiState.update { it.copy(note = event.value) }
 
             AddExpenseUiEvent.SaveClicked ->
                 saveExpense()
+
+            AddExpenseUiEvent.DateClicked ->
+                emitEffect(AddExpenseUiEffect.ShowDatePicker)
+
+
+
+            is AddExpenseUiEvent.DateSelected ->  _uiState.update { it.copy(selectedDate = event.date) }
+        }
+    }
+
+    private fun emitEffect(effect: AddExpenseUiEffect) {
+        viewModelScope.launch {
+            _uiEffect.emit(effect)
         }
     }
 
