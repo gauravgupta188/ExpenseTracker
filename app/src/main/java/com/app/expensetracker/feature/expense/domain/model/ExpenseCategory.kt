@@ -5,7 +5,7 @@ enum class ExpenseCategory(val value: String) {
     TRANSPORT("TRANSPORT"),
     RENT("RENT"),
     SHOPPING("SHOPPING"),
-    BILLS(value = "BILL"),
+    BILLS("BILLS"),
     OTHER("OTHER");
 
     companion object {

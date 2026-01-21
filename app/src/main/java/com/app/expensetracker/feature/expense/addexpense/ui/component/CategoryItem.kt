@@ -4,11 +4,14 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,35 +32,39 @@ fun CategoryItem(
 ) {
     val borderColor =
         if (isSelected) MaterialTheme.colorScheme.primary
-        else MaterialTheme.colorScheme.outline
+        else MaterialTheme.colorScheme.secondary
 
     val backgroundColor =
         if (isSelected)
             MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
         else
-            MaterialTheme.colorScheme.surface
+            MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
-            .height(110.dp)
-            .clip(RoundedCornerShape(20.dp))
+
+           /* .clip(RoundedCornerShape(20.dp))
             .border(1.dp, borderColor, RoundedCornerShape(20.dp))
-            .background(backgroundColor)
+            .background(backgroundColor)*/
             .clickable(onClick = onClick),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        Icon(
-            imageVector = category.icon(),
-            contentDescription = null,
-            tint = if (isSelected)
-                MaterialTheme.colorScheme.primary
-            else
-                MaterialTheme.colorScheme.onSurfaceVariant,
-            modifier = Modifier.size(28.dp)
-        )
+        Box    {
+            Icon(
+                imageVector = category.icon(),
+                contentDescription = null,
+                tint = if (isSelected)
+                    MaterialTheme.colorScheme.primary
+                else
+                    MaterialTheme.colorScheme.onSurfaceVariant,
+                modifier = Modifier
+                    .size(64.dp)
+                    .background(backgroundColor, shape = CircleShape)
+                    .padding(10.dp)
+            )
+        }
 
         Spacer(modifier = Modifier.height(8.dp))
 

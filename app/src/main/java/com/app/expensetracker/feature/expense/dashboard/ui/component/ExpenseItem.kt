@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.dashboard.ui.component
 
+import android.text.format.DateUtils
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -21,6 +22,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.utils.formatDateTime
 import com.app.expensetracker.feature.expense.domain.model.Expense
 
 
@@ -58,7 +60,7 @@ fun ExpenseItem(expense: Expense) {
                 style = MaterialTheme.typography.bodyLarge
             )
             Text(
-                text = expense.date.toString(),
+                text = formatDateTime(expense.date),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
             )

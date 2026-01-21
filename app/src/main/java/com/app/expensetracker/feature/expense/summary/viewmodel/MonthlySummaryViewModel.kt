@@ -8,21 +8,24 @@ import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEffe
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEvent
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class MonthlySummaryViewModel @Inject constructor(
-    private val getMonthlySummaryUseCase : GetMonthlySummaryUseCase
+    private val getMonthlySummaryUseCase: GetMonthlySummaryUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         MonthlySummaryUiState(
-            selectedMonth = YearMonthUiModel.current()
+            selectedMonth = YearMonthUiModel.current(),
+            isLoading = true
         )
     )
     val uiState: StateFlow<MonthlySummaryUiState> = _uiState
@@ -30,8 +33,15 @@ class MonthlySummaryViewModel @Inject constructor(
     private val _uiEffect = MutableSharedFlow<MonthlySummaryUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
+    private var summaryJob: Job? = null
+
+    init {
+        loadMonth(_uiState.value.selectedMonth)
+    }
+
     fun onEvent(event: MonthlySummaryUiEvent) {
         when (event) {
+
             MonthlySummaryUiEvent.OnBackClicked ->
                 emitEffect(MonthlySummaryUiEffect.NavigateBack)
 
@@ -40,6 +50,40 @@ class MonthlySummaryViewModel @Inject constructor(
 
             MonthlySummaryUiEvent.OnMonthSelectorClicked ->
                 emitEffect(MonthlySummaryUiEffect.OpenMonthPicker)
+
+            is MonthlySummaryUiEvent.OnMonthSelected -> {
+                _uiState.update {
+                    it.copy(
+                        selectedMonth = event.month,
+                        isLoading = true,
+                        errorMessage = null
+                    )
+                }
+                loadMonth(event.month)
+            }
+        }
+    }
+
+    private fun loadMonth(month: YearMonthUiModel) {
+        summaryJob?.cancel()
+
+        summaryJob = viewModelScope.launch {
+            getMonthlySummaryUseCase(
+                year = month.year,
+                month = month.month
+            ).collect { categories ->
+
+                val totalSpent = categories.sumOf { it.spentAmount }
+
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        categories = categories,
+                        totalSpent = totalSpent,
+                        errorMessage = null
+                    )
+                }
+            }
         }
     }
 

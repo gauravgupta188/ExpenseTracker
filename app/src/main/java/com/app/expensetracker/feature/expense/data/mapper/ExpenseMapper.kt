@@ -13,7 +13,9 @@ fun Expense.toDto(): ExpenseDto =
         category = category.value,
         note = note,
         paymentMode = paymentMode,
-        date = Timestamp(date.atStartOfDay(ZoneId.systemDefault()).toInstant()),
+        date = Timestamp(
+            date.atZone(ZoneId.systemDefault()).toInstant()
+        ),
         month = month,
         year = year
     )
@@ -29,7 +31,7 @@ fun ExpenseDto.toDomain(id: String): Expense =
         date = date.toDate()
             .toInstant()
             .atZone(ZoneId.systemDefault())
-            .toLocalDate(),
+            .toLocalDateTime(),
         month = month,
         year = year
     )

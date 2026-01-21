@@ -1,6 +1,7 @@
 package com.app.expensetracker.feature.expense.domain.model
 
 import java.time.LocalDate
+import java.time.LocalDateTime
 
 /**
  * Domain model for an Expense.
@@ -13,7 +14,7 @@ data class Expense(
     val category: ExpenseCategory,
     val note: String?,
     val paymentMode: String,
-    val date: LocalDate,
+    val date: LocalDateTime,
     val month: Int,
     val year: Int
 )
