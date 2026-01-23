@@ -29,11 +29,13 @@ import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEffec
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEvent
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiState
 import com.app.expensetracker.feature.expense.addexpense.ui.component.AmountInput
+import com.app.expensetracker.feature.expense.addexpense.ui.component.AppTimePickerDialog
 import com.app.expensetracker.feature.expense.addexpense.ui.component.CategoryBottomSheet
 import com.app.expensetracker.feature.expense.addexpense.ui.component.CategorySelection
 import com.app.expensetracker.feature.expense.addexpense.ui.component.DateInput
 import com.app.expensetracker.feature.expense.addexpense.ui.component.NoteInput
 import kotlinx.coroutines.flow.Flow
+import java.time.LocalDate
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -46,6 +48,7 @@ fun AddExpenseScreen(
     // val uiState by viewModel.uiState.collectAsState()
     val snackbarHostState = remember { SnackbarHostState() }
     var showDatePicker by remember { mutableStateOf(false) }
+    var showTimePicker by remember { mutableStateOf(false) }
 
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
@@ -55,7 +58,9 @@ fun AddExpenseScreen(
                     snackbarHostState.showSnackbar(effect.message)
 
                 AddExpenseUiEffect.ShowDatePicker -> showDatePicker = true
+                is AddExpenseUiEffect.ShowTimePicker -> showTimePicker = true
             }
+
         }
     }
 
@@ -113,9 +118,9 @@ fun AddExpenseScreen(
                             AddExpenseUiEvent.CategorySelected(it)
                         )
                     },
-                    onViewAllClick =   {onEvent(AddExpenseUiEvent.SeeAllCategoriesClicked)},
+                    onViewAllClick = { onEvent(AddExpenseUiEvent.SeeAllCategoriesClicked) },
 
-                )
+                    )
             }
 
             item {
@@ -153,7 +158,7 @@ fun AddExpenseScreen(
 
         if (showDatePicker) {
             AppDatePickerDialog(
-                initialDate = uiState.selectedDate,
+                initialDate = uiState.selectedDate.toLocalDate(),
                 onDateSelected = {
                     onEvent(AddExpenseUiEvent.DateSelected(it))
                     showDatePicker = false
@@ -163,6 +168,18 @@ fun AddExpenseScreen(
                 }
             )
         }
+
+        if (showTimePicker) {
+            AppTimePickerDialog(
+                initialDateTime = uiState.selectedDate.toLocalTime(),
+                onTimeSelected = {
+                    showTimePicker = false
+                    onEvent(AddExpenseUiEvent.TimeSelected(it))
+                },
+                onDismiss = { showTimePicker = false }
+            )
+        }
+
 
     }
 }

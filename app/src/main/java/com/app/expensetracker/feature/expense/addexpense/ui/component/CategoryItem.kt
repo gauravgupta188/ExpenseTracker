@@ -59,7 +59,7 @@ fun CategoryItem(
         Box(modifier = Modifier.size(56.dp).background(backgroundColor, shape = CircleShape),
             contentAlignment = Alignment.Center)    {
             Icon(
-                imageVector = category.icon(),
+                imageVector = category.icon,
                 contentDescription = null,
                 tint = contentColor,
             )

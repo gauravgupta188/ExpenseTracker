@@ -39,8 +39,8 @@ fun AppScaffold(
         bottomBar = {
             bottomBar?.invoke()
         },
-/*
-        floatingActionButton = {
+
+       /* floatingActionButton = {
             floatingActionButton?.invoke()
         },*/
 

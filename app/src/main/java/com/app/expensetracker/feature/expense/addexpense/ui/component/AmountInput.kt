@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -66,11 +67,9 @@ fun AmountInput(
 
         Spacer(modifier = Modifier.height(12.dp))
 
-        Divider(
-            thickness = 2.dp,
-            color = MaterialTheme.colorScheme.primary,
+        HorizontalDivider(
             modifier = Modifier
-                .fillMaxWidth(0.6f)
+                .fillMaxWidth(0.6f), thickness = 2.dp, color = MaterialTheme.colorScheme.primary
         )
     }
 }

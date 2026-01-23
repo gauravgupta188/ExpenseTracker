@@ -27,10 +27,6 @@ fun generateMonths(
                 YearMonthUiModel(
                     year = yearMonth.year,
                     month = yearMonth.monthValue,
-                    label = yearMonth.month.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.ENGLISH
-                    )
                 )
             )
         }

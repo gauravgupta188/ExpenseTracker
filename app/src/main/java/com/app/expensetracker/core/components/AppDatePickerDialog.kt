@@ -8,20 +8,19 @@ import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import java.time.Instant
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.ZoneId
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppDatePickerDialog(
-    initialDate: LocalDateTime,
-    onDateSelected: (LocalDateTime) -> Unit,
+    initialDate: LocalDate,
+    onDateSelected: (LocalDate) -> Unit,
     onDismiss: () -> Unit
 ) {
     val datePickerState = rememberDatePickerState(
         initialSelectedDateMillis =
             initialDate
-                .atZone(ZoneId.systemDefault())
+                .atStartOfDay(ZoneId.systemDefault())
                 .toInstant()
                 .toEpochMilli()
     )
@@ -29,27 +28,19 @@ fun AppDatePickerDialog(
     DatePickerDialog(
         onDismissRequest = onDismiss,
         confirmButton = {
-            TextButton(
-                onClick = {
-                    val millis = datePickerState.selectedDateMillis
-                        ?: return@TextButton
+            TextButton(onClick = {
+                val millis = datePickerState.selectedDateMillis ?: return@TextButton
+                val date = Instant.ofEpochMilli(millis)
+                    .atZone(ZoneId.systemDefault())
+                    .toLocalDate()
 
-                    val selectedDate = Instant.ofEpochMilli(millis)
-                        .atZone(ZoneId.systemDefault())
-                        .toLocalDateTime()
-
-                    onDateSelected(selectedDate)
-                }
-            ) {
+                onDateSelected(date)
+            }) {
                 Text("OK")
-            }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) {
-                Text("Cancel")
             }
         }
     ) {
         DatePicker(state = datePickerState)
     }
 }
+

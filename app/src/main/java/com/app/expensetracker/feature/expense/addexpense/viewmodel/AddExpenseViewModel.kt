@@ -15,6 +15,8 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.time.LocalDate
+import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
@@ -27,6 +29,7 @@ class AddExpenseViewModel @Inject constructor(
 
     private val _uiEffect = MutableSharedFlow<AddExpenseUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
+    private var pendingDate: LocalDate? = null
 
     fun onEvent(event: AddExpenseUiEvent) {
         when (event) {
@@ -59,7 +62,14 @@ class AddExpenseViewModel @Inject constructor(
 
 
 
-            is AddExpenseUiEvent.DateSelected ->  _uiState.update { it.copy(selectedDate = event.date) }
+            is AddExpenseUiEvent.DateSelected -> {
+                pendingDate = event.date
+                emitEffect(AddExpenseUiEffect.ShowTimePicker)
+             }
+
+            is AddExpenseUiEvent.TimeSelected -> {
+                val date = pendingDate ?: LocalDate.now()
+                _uiState.update { it.copy(selectedDate = LocalDateTime.of(date, event.time)) }}
         }
     }
 
