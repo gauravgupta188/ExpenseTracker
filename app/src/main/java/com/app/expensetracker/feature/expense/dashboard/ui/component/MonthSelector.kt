@@ -83,14 +83,14 @@ private fun MonthItem(
 
         Spacer(modifier = Modifier.height(2.dp))
 
-        Text(
+       /* Text(
             text = month.year.toString(),
             style = MaterialTheme.typography.labelSmall,
             color = if (isSelected)
                 Color.White.copy(alpha = 0.9f)
             else
                 Color.Gray
-        )
+        )*/
     }
 }
 

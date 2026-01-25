@@ -37,7 +37,11 @@ fun DashboardScreen(
 
             DashboardTopSection(
                 modifier = Modifier.weight(0.4f),
-                uiState = state
+                uiState = state,
+                onMonthSelected = {yearMonthUiModel ->
+
+                    onEvent(ExpenseUiEvent.OnMonthSelected(yearMonthUiModel))
+                }
             )
 
             DashboardExpenseSection(

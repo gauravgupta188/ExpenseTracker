@@ -9,6 +9,7 @@ import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -16,6 +17,7 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.time.Year
 import javax.inject.Inject
 
@@ -23,7 +25,7 @@ import javax.inject.Inject
 class DashboardViewModel @Inject constructor(
     private val getExpensesByMonth: GetExpensesByMonthUseCase,
 ) : ViewModel() {
-
+    private var expenseJob: Job? = null
 
     private val _selectedMonth =
         MutableStateFlow(YearMonthUiModel.current())
@@ -95,8 +97,36 @@ class DashboardViewModel @Inject constructor(
             is ExpenseUiEvent.ExpenseClicked -> {
                 // Handle navigation to details
             }
+
+            is ExpenseUiEvent.OnMonthSelected -> {
+                if (event.month != uiState.value.selectedMonth) {
+                    _uiState.update { it.copy(selectedMonth = event.month,isLoading = true) }
+                }
+                loadExpenses(event.month)
+
+            }
         }
     }
+
+    private fun loadExpenses(month: YearMonthUiModel) {
+        expenseJob?.cancel()
+
+        expenseJob = viewModelScope.launch {
+            getExpensesByMonth(
+                year = month.year,
+                month = month.month
+            ).collect { expenses ->
+                _uiState.update {
+                    it.copy(
+                        expenses = expenses,
+                        totalAmount = expenses.sumOf { e -> e.amount },
+                        isLoading = false
+                    )
+                }
+            }
+        }
+    }
+
 }
 
 

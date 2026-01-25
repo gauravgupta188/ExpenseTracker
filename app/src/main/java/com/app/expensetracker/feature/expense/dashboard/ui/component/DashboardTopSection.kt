@@ -17,11 +17,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
+import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 
 
 @Composable
 fun DashboardTopSection(
-    modifier: Modifier = Modifier, uiState: ExpenseUiState
+    modifier: Modifier = Modifier,
+    uiState: ExpenseUiState,
+    onMonthSelected: (YearMonthUiModel) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -51,7 +54,7 @@ fun DashboardTopSection(
             months = uiState.months,
             selectedMonth = uiState.selectedMonth,
             listState = listState,
-            onMonthSelected = {}
+            onMonthSelected = onMonthSelected
         )
 
         Spacer(Modifier.height(32.dp))

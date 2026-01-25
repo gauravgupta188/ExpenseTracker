@@ -2,6 +2,7 @@ package com.app.expensetracker.feature.expense.dashboard.ui.component
 
 import android.text.format.DateUtils
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -55,15 +56,23 @@ fun ExpenseItem(expense: Expense) {
         Spacer(Modifier.width(12.dp))
 
         Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = expense.title,
-                style = MaterialTheme.typography.bodyLarge
-            )
-            Text(
-                text = formatDateTime(expense.date),
+
+               Text(
+                   text = expense.note?.uppercase() ?: "",
+                   style = MaterialTheme.typography.bodyLarge
+               )
+               Text(
+                   text = formatDateTime(expense.date),
+                   style = MaterialTheme.typography.bodySmall,
+                   color = Color.Gray
+               )
+
+
+          /*  Text(
+                text = expense.note?:"",
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
-            )
+            )*/
         }
 
         Text(
