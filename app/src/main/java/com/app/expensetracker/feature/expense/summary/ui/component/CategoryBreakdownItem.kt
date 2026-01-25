@@ -1,6 +1,7 @@
 package com.app.expensetracker.feature.expense.summary.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -21,6 +22,7 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
 @Composable
 fun CategoryBreakdownItem(
     model: CategorySummaryUiModel,
+    onClick:() -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -32,6 +34,7 @@ fun CategoryBreakdownItem(
     ) {
 
         Row(
+            modifier = Modifier.clickable(onClick= onClick),
             verticalAlignment = Alignment.CenterVertically
         ) {
 

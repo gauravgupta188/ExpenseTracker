@@ -8,8 +8,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.credentials.CredentialManager
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.app.expensetracker.feature.auth.login.ui.LoginScreen
 import com.app.expensetracker.feature.auth.login.viewmodel.LoginViewModel
@@ -19,6 +21,9 @@ import com.app.expensetracker.feature.auth.resetpassword.ui.ResetPasswordScreen
 import com.app.expensetracker.feature.auth.resetpassword.viewmodel.ResetPasswordViewModel
 import com.app.expensetracker.feature.expense.addexpense.viewmodel.AddExpenseViewModel
 import com.app.expensetracker.feature.expense.addexpense.ui.AddExpenseScreen
+import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiEffect
+import com.app.expensetracker.feature.expense.categorydetail.ui.CategoryDetailScreen
+import com.app.expensetracker.feature.expense.categorydetail.viewmodel.CategoryDetailViewModel
 
 import com.app.expensetracker.feature.expense.dashboard.ui.DashboardScreen
 import com.app.expensetracker.feature.expense.dashboard.viewmodel.DashboardViewModel
@@ -160,8 +165,52 @@ fun AppNavGraph(
                     onMonthSelectorClick = { },
                     onAddExpenseClick = {},
                     onViewAllCategoriesClick = {},
+                    onCategoryClick = { category ->
+                        val month = viewModel.uiState.value.selectedMonth
+                      //  val category = viewModel.uiState.
+
+                        navController.navigate(
+                            Routes.CategoryDetail.createRoute(
+                                category = category,
+                                year = month.year,
+                                month = month.month
+                            )
+                        )
+                    }
                 )
             }
+            composable(
+                route = Routes.CategoryDetail.route,
+                arguments = listOf(
+                    navArgument("category") { type = NavType.StringType },
+                    navArgument("year") { type = NavType.IntType },
+                    navArgument("month") { type = NavType.IntType }
+                )
+            ) {
+                val viewModel: CategoryDetailViewModel = hiltViewModel()
+
+                CategoryDetailScreen(
+                    state = viewModel.uiState.collectAsState().value,
+                    onEvent = viewModel::onEvent
+                )
+
+                LaunchedEffect(Unit) {
+                    viewModel.uiEffect.collect { effect ->
+                        when (effect) {
+                            CategoryDetailUiEffect.NavigateBack ->
+                                navController.popBackStack()
+
+                            CategoryDetailUiEffect.NavigateToAddExpense ->
+                                navController.navigate(Routes.AddExpense.route)
+
+                            CategoryDetailUiEffect.OpenFilter -> {
+                                // future
+                            }
+                        }
+                    }
+                }
+            }
+
 
 
         }

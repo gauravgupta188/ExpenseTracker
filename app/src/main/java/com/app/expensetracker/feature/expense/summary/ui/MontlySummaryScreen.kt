@@ -24,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.core.components.AppScaffold
+import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
 import com.app.expensetracker.feature.expense.summary.ui.component.CategoryBreakdownHeader
 import com.app.expensetracker.feature.expense.summary.ui.component.CategoryBreakdownItem
@@ -36,6 +37,7 @@ fun MonthlySummaryScreen(
     state: MonthlySummaryUiState,
     onBackClick: () -> Unit,
     onMonthSelectorClick: () -> Unit,
+    onCategoryClick: (ExpenseCategory) -> Unit,
     onAddExpenseClick: () -> Unit,
     onViewAllCategoriesClick: () -> Unit,
 ) {
@@ -99,7 +101,10 @@ fun MonthlySummaryScreen(
                 key = { it.category.name }
             ) { category ->
                 CategoryBreakdownItem(
-                    model = category
+                    model = category,
+                    onClick = {
+                        onCategoryClick(category.category)
+                    }
                 )
             }
 

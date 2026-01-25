@@ -1,5 +1,7 @@
 package com.app.expensetracker.core.navigation
 
+import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
+
 
 sealed class Routes(val route: String) {
 
@@ -21,6 +23,18 @@ sealed class Routes(val route: String) {
     data object Home : Routes("home")
     data object AddExpense : Routes("add_expense")
     data object ExpenseSummary : Routes("expense_summary")
+    object CategoryDetail : Routes(
+        "category_detail/{category}/{year}/{month}"
+    ) {
+        fun createRoute(
+            category: ExpenseCategory,
+            year: Int,
+            month: Int
+        ): String {
+            return "category_detail/${category.name}/$year/$month"
+        }
+    }
+
     data object Profile : Routes("profile")
     data object Settings : Routes("settings")
 }
