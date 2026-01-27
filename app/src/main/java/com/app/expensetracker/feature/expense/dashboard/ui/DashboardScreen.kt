@@ -36,7 +36,7 @@ fun DashboardScreen(
             .navigationBarsPadding()) {
 
             DashboardTopSection(
-                modifier = Modifier.weight(0.4f),
+               // modifier = Modifier.weight(0.4f),
                 uiState = state,
                 onMonthSelected = {yearMonthUiModel ->
 
@@ -45,7 +45,7 @@ fun DashboardScreen(
             )
 
             DashboardExpenseSection(
-                modifier = Modifier.weight(0.6f),
+                //modifier = Modifier.weight(0.6f),
                 state = state,
                 onViewAllClick = onViewAllClick
             )

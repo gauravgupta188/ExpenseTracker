@@ -48,20 +48,22 @@ fun DashboardTopSection(
 
         DashboardHeader()
 
-        Spacer(Modifier.height(24.dp))
+        Spacer(Modifier.height(16.dp))
 
-        MonthSelector(
+        DashboardBudgetCard(spend = uiState.totalAmount,remaining = 25000.00)
+
+      /*  MonthSelector(
             months = uiState.months,
             selectedMonth = uiState.selectedMonth,
             listState = listState,
             onMonthSelected = onMonthSelected
-        )
+        )*/
 
         Spacer(Modifier.height(32.dp))
 
-        MonthlyTotal(
+        /*MonthlyTotal(
             amount = "$ ${uiState.totalAmount}"
-        )
+        )*/
     }
 }
 
