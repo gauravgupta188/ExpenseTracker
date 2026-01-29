@@ -1,23 +1,34 @@
 package com.app.expensetracker.feature.expense.dashboard.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
 import com.app.expensetracker.feature.expense.dashboard.ui.component.AddExpenseFab
-import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardExpenseSection
-import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardTopSection
+import com.app.expensetracker.feature.expense.dashboard.ui.component.CategorySection
+import com.app.expensetracker.feature.expense.dashboard.ui.component.ExpenseSectionHeader
+import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardTopAppBar
+import com.app.expensetracker.feature.expense.dashboard.ui.component.ExpenseItem
+import com.app.expensetracker.feature.expense.dashboard.ui.component.MonthlySnapshotCard
 import com.app.expensetracker.ui.theme.BrandBlack
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
     modifier: Modifier = Modifier,
@@ -26,40 +37,78 @@ fun DashboardScreen(
     onAddExpenseClick: () -> Unit,
     onViewAllClick: () -> Unit
 ) {
-    Box(modifier = modifier
-        .fillMaxSize()
-        .background(BrandBlack)
-        .navigationBarsPadding()) {
 
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .navigationBarsPadding()) {
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-            DashboardTopSection(
-               // modifier = Modifier.weight(0.4f),
-                uiState = state,
-                onMonthSelected = {yearMonthUiModel ->
+    Scaffold(modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+        topBar = {
+            DashboardTopAppBar(scrollBehavior = scrollBehavior)
+        },
 
-                    onEvent(ExpenseUiEvent.OnMonthSelected(yearMonthUiModel))
-                }
-            )
-
-            DashboardExpenseSection(
-                //modifier = Modifier.weight(0.6f),
-                state = state,
-                onViewAllClick = onViewAllClick
+        floatingActionButton = {
+            AddExpenseFab(
+                onAddExpenseClick = onAddExpenseClick
             )
         }
 
-        AddExpenseFab(
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(24.dp),
-            onAddExpenseClick = onAddExpenseClick
+    ) { paddingValues ->
 
-        )
+
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .navigationBarsPadding()
+                    .background(Color.White).padding(paddingValues),
+                verticalArrangement = Arrangement.spacedBy(16.dp),
+                contentPadding = PaddingValues(16.dp)
+
+            ) {
+
+                item {
+                    Spacer(Modifier.height(8.dp))
+
+                    MonthlySnapshotCard(
+                       // modifier = Modifier.padding(horizontal = 16.dp),
+                        spend = state.totalAmount,
+                        remaining = 25000.00
+                    )
+                }
+
+                if (!state.topCategories.isEmpty()) {
+                    item {
+                        CategorySection(
+                            categories = state.topCategories,
+                            onCategoryClick = { category ->
+                                onEvent(
+                                    ExpenseUiEvent.OnCategoryClicked(category)
+                                )
+                            },
+                            onViewAllClick = {
+                                onEvent(
+                                    ExpenseUiEvent.OnViewAllCategoriesClicked
+                                )
+                            }
+                        )
+                    }
+
+                }
+                item {
+                    ExpenseSectionHeader(
+                        onViewAllClick = onViewAllClick,
+                        title = "Recent Expenses"
+                    )
+                }
+
+                items(state.expenses.size) { index ->
+                    ExpenseItem(expense = state.expenses[index])
+                }
+            }
+
+
+        }
     }
-}
+
 
 
 

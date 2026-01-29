@@ -15,13 +15,12 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun AddExpenseFab(
-    modifier: Modifier,
     onAddExpenseClick: () -> Unit
 ) {
     FloatingActionButton(
         onClick = { onAddExpenseClick() },
         containerColor = Color(0xFFFF9800),
-        modifier = modifier.size(64.dp),
+        modifier = Modifier.size(64.dp),
         contentColor = MaterialTheme.colorScheme.primary,
         shape = CircleShape,
         elevation = FloatingActionButtonDefaults.elevation(8.dp)

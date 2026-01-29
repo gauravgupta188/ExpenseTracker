@@ -3,15 +3,19 @@ package com.app.expensetracker.feature.expense.dashboard.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.core.utils.generateMonths
+import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
+import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
@@ -29,6 +33,8 @@ class DashboardViewModel @Inject constructor(
 
     private val _selectedMonth =
         MutableStateFlow(YearMonthUiModel.current())
+    private val _uiEffect = MutableSharedFlow<ExpenseUiEffect>()
+    val uiEffect = _uiEffect.asSharedFlow()
 
     private val months = generateMonths(
         startYear = 2025,
@@ -61,28 +67,7 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeExpenses() {
-        _selectedMonth
-            .flatMapLatest { month ->
-                getExpensesByMonth(
-                    year = month.year,
-                    month = month.month
-                )
-            }
-            .onEach { expenses ->
-                val total = expenses.sumOf { it.amount }
 
-                _uiState.update {
-                    it.copy(
-                        expenses = expenses,
-                        totalAmount = total,
-                        isLoading = false
-                    )
-                }
-            }
-            .launchIn(viewModelScope)
-    }
 
     fun onEvent(event: ExpenseUiEvent) {
         when (event) {
@@ -102,28 +87,63 @@ class DashboardViewModel @Inject constructor(
                 if (event.month != uiState.value.selectedMonth) {
                     _uiState.update { it.copy(selectedMonth = event.month,isLoading = true) }
                 }
-                loadExpenses(event.month)
+               // observeExpenses()
 
+            }
+
+            is ExpenseUiEvent.OnCategoryClicked -> {
+                emitEffect(
+                    ExpenseUiEffect.NavigateToCategory(event.category)
+                )
+            }
+
+            ExpenseUiEvent.OnViewAllCategoriesClicked -> {
+                emitEffect(
+                    ExpenseUiEffect.NavigateToAllCategories
+                )
             }
         }
     }
 
-    private fun loadExpenses(month: YearMonthUiModel) {
-        expenseJob?.cancel()
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeExpenses() {
+        _selectedMonth
+            .flatMapLatest { month ->
+                getExpensesByMonth(
+                    year = month.year,
+                    month = month.month
+                )
+            }
+            .onEach { expenses ->
+                val total = expenses.sumOf { it.amount }
+                val topCategories =
+                    expenses
+                        .groupBy { it.category }
+                        .map { (category, list) ->
+                            CategorySummaryUiModel(
+                                category = category,
+                                spentAmount = list.sumOf { it.amount }
+                            )
+                        }
+                        .sortedByDescending { it.spentAmount }
+                        .take(3)
 
-        expenseJob = viewModelScope.launch {
-            getExpensesByMonth(
-                year = month.year,
-                month = month.month
-            ).collect { expenses ->
                 _uiState.update {
                     it.copy(
                         expenses = expenses,
-                        totalAmount = expenses.sumOf { e -> e.amount },
-                        isLoading = false
+                        totalAmount = total,
+                        isLoading = false,
+                        topCategories = topCategories
                     )
                 }
             }
+            .launchIn(viewModelScope)
+    }
+
+
+    private fun emitEffect(effect: ExpenseUiEffect) {
+        viewModelScope.launch {
+            _uiEffect.emit(effect)
         }
     }
 
