@@ -1,8 +1,6 @@
-package com.app.expensetracker.feature.expense.dashboard.ui.component
+package com.app.expensetracker.feature.expense.component
 
-import android.text.format.DateUtils
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -28,7 +26,11 @@ import com.app.expensetracker.feature.expense.domain.model.Expense
 
 
 @Composable
-fun ExpenseItem(expense: Expense) {
+fun ExpenseItem(
+    expense: Expense,
+    onClick: () -> Unit ={}
+
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -57,22 +59,22 @@ fun ExpenseItem(expense: Expense) {
 
         Column(modifier = Modifier.weight(1f)) {
 
-               Text(
-                   text = expense.note?.uppercase() ?: "",
-                   style = MaterialTheme.typography.bodyLarge
-               )
-               Text(
-                   text = formatDateTime(expense.date),
-                   style = MaterialTheme.typography.bodySmall,
-                   color = Color.Gray
-               )
-
-
-          /*  Text(
-                text = expense.note?:"",
+            Text(
+                text = expense.note?.uppercase() ?: "",
+                style = MaterialTheme.typography.bodyLarge
+            )
+            Text(
+                text = formatDateTime(expense.date),
                 style = MaterialTheme.typography.bodySmall,
                 color = Color.Gray
-            )*/
+            )
+
+
+            /*  Text(
+                  text = expense.note?:"",
+                  style = MaterialTheme.typography.bodySmall,
+                  color = Color.Gray
+              )*/
         }
 
         Text(

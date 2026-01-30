@@ -2,7 +2,6 @@ package com.app.expensetracker.feature.expense.dashboard.ui
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +21,10 @@ import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
 import com.app.expensetracker.feature.expense.dashboard.ui.component.AddExpenseFab
 import com.app.expensetracker.feature.expense.dashboard.ui.component.CategorySection
-import com.app.expensetracker.feature.expense.dashboard.ui.component.ExpenseSectionHeader
+import com.app.expensetracker.feature.expense.component.ExpenseSectionHeader
 import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardTopAppBar
-import com.app.expensetracker.feature.expense.dashboard.ui.component.ExpenseItem
+import com.app.expensetracker.feature.expense.component.ExpenseItem
 import com.app.expensetracker.feature.expense.dashboard.ui.component.MonthlySnapshotCard
-import com.app.expensetracker.ui.theme.BrandBlack
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,13 +33,16 @@ fun DashboardScreen(
     state: ExpenseUiState,
     onEvent: (ExpenseUiEvent) -> Unit,
     onAddExpenseClick: () -> Unit,
-    onViewAllClick: () -> Unit
+    onViewAllClick: () -> Unit,
+    onBudgetEditClick: () -> Unit
 ) {
 
     val scrollBehavior =
         TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
 
-    Scaffold(modifier = Modifier.fillMaxSize().nestedScroll(scrollBehavior.nestedScrollConnection),
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
             DashboardTopAppBar(scrollBehavior = scrollBehavior)
         },
@@ -54,12 +55,12 @@ fun DashboardScreen(
 
     ) { paddingValues ->
 
-
-            LazyColumn(
+        LazyColumn(
                 modifier = Modifier
                     .fillMaxSize()
                     .navigationBarsPadding()
-                    .background(Color.White).padding(paddingValues),
+                    .background(Color.White)
+                    .padding(paddingValues),
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 contentPadding = PaddingValues(16.dp)
 
@@ -71,7 +72,9 @@ fun DashboardScreen(
                     MonthlySnapshotCard(
                        // modifier = Modifier.padding(horizontal = 16.dp),
                         spend = state.totalAmount,
-                        remaining = 25000.00
+                        remaining = state.remainingBudget,
+                        monthlyBudget = state.monthlyBudget,
+                        onBudgetEditClick = {  onBudgetEditClick() }
                     )
                 }
 
@@ -104,8 +107,6 @@ fun DashboardScreen(
                     ExpenseItem(expense = state.expenses[index])
                 }
             }
-
-
         }
     }
 

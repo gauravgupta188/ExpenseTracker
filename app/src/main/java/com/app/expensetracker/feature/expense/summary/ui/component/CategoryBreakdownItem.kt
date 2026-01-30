@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,7 +23,8 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
 @Composable
 fun CategoryBreakdownItem(
     model: CategorySummaryUiModel,
-    onClick:() -> Unit,
+    onCategoryClick:(CategorySummaryUiModel) -> Unit,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -30,15 +32,18 @@ fun CategoryBreakdownItem(
             .padding(horizontal = 16.dp, vertical = 8.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
+            .clickable { onEditClick() }
             .padding(16.dp)
     ) {
 
         Row(
-            modifier = Modifier.clickable(onClick= onClick),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically
         ) {
 
-            Column {
+            Column( modifier = Modifier
+                .weight(1f)
+                ) {
                 Text(
                     text = model.category.value,
                     style = MaterialTheme.typography.titleMedium

@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.summary.model
 
+import com.app.expensetracker.feature.expense.dashboard.ui.model.BudgetUsageLevel
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 
 data class CategorySummaryUiModel(
@@ -30,4 +31,12 @@ data class CategorySummaryUiModel(
 
     val isOverBudget: Boolean
         get() = hasBudget && spentAmount > budgetAmount!!
+
+    val usageLevel: BudgetUsageLevel
+        get() = when {
+            !hasBudget -> BudgetUsageLevel.NONE
+            usagePercent < 70 -> BudgetUsageLevel.SAFE
+            usagePercent < 90 -> BudgetUsageLevel.WARNING
+            else -> BudgetUsageLevel.CRITICAL
+        }
 }

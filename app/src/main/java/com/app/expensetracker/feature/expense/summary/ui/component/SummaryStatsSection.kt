@@ -18,7 +18,8 @@ fun SummaryStatsSection(
     budgetAmount: Double,
     spendingChangePercent: Int,
     isSpendingDown: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onBudgetEditClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -34,9 +35,10 @@ fun SummaryStatsSection(
             SummaryStatCard(
                 title = "TOTAL SPENT",
                 amount = totalSpent,
-                footerText = "$spendingChangePercent% vs last month",
+                footerText = if (spendingChangePercent > 0) "$spendingChangePercent% vs last month" else "",
                 footerColor = if (isSpendingDown) Color(0xFF2E7D32) else Color.Red,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+
             )
 
             SummaryStatCard(
@@ -44,7 +46,9 @@ fun SummaryStatsSection(
                 amount = remainingAmount,
                 footerText = "Budget ₹${budgetAmount.toInt()}",
                 footerColor = Color.Gray,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
+                isEdit = true,
+                budgetClick = {onBudgetEditClick()}
             )
         }
     }

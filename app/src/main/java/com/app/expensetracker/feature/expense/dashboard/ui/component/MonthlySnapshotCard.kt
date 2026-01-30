@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.dashboard.ui.component
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,15 +23,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.feature.expense.dashboard.ui.model.color
+import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
 
 @Composable
 fun MonthlySnapshotCard(
     spend: Double,
     remaining: Double,
-    modifier: Modifier = Modifier
+    monthlyBudget:Double,
+    modifier: Modifier = Modifier,
+    onBudgetEditClick:() -> Unit
 ) {
+
+    val budgetColor = monthlyUsageLevel(spend,monthlyBudget).color()
     Card(
-        modifier = modifier.padding(top = 16.dp,),
+        modifier = modifier.padding(top = 16.dp,).clickable(onClick = onBudgetEditClick),
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 6.dp
@@ -58,6 +65,8 @@ fun MonthlySnapshotCard(
             HorizontalDivider(thickness = 0.5.dp, color = Color.Gray.copy(alpha = 0.5f), modifier = Modifier.padding(vertical = 16.dp))
 
 
+
+
             Row(  verticalAlignment = Alignment.CenterVertically,  modifier = modifier
                 .fillMaxWidth()
                 ) {
@@ -71,11 +80,11 @@ fun MonthlySnapshotCard(
                     Text(
                         text = "₹${"%,.2f".format(remaining)}",
                         style = MaterialTheme.typography.headlineSmall,
-                        color = MaterialTheme.colorScheme.secondary
+                        color = budgetColor
                     )
                 }
-                Spacer(modifier = Modifier.weight(1f))
-                Box(
+                //Spacer(modifier = Modifier.weight(1f))
+               /* Box(
                     modifier = Modifier
                         .size(32.dp)
                         .background(
@@ -90,7 +99,7 @@ fun MonthlySnapshotCard(
                         contentDescription = null,
                         tint = Color.White
                     )
-                }
+                }*/
             }
 
 

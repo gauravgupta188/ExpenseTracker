@@ -2,24 +2,40 @@ package com.app.expensetracker.feature.expense.summary.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
+import com.app.expensetracker.feature.expense.domain.model.SummaryAggregate
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
+import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.GetMonthlySummaryUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudgetUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.SaveCategoryBudgetUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.SaveMonthlyBudgetUseCase
+import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEffect
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEvent
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlin.collections.orEmpty
 
 @HiltViewModel
 class MonthlySummaryViewModel @Inject constructor(
-    private val getMonthlySummaryUseCase: GetMonthlySummaryUseCase
+    private val getExpenseByMonth: GetExpensesByMonthUseCase,
+    private val getMonthlySummary: GetMonthlySummaryUseCase,
+    private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
+    private val saveMonthlyBudget: SaveMonthlyBudgetUseCase,
+    private val saveCategoryBudget: SaveCategoryBudgetUseCase
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -31,12 +47,11 @@ class MonthlySummaryViewModel @Inject constructor(
     val uiState: StateFlow<MonthlySummaryUiState> = _uiState
 
     private val _uiEffect = MutableSharedFlow<MonthlySummaryUiEffect>()
-    val uiEffect = _uiEffect.asSharedFlow()
-
-    private var summaryJob: Job? = null
+    private val _selectedMonth =
+        MutableStateFlow(YearMonthUiModel.current())
 
     init {
-        loadMonth(_uiState.value.selectedMonth)
+        observeDashboardData()
     }
 
     fun onEvent(event: MonthlySummaryUiEvent) {
@@ -59,37 +74,235 @@ class MonthlySummaryViewModel @Inject constructor(
                         errorMessage = null
                     )
                 }
-                loadMonth(event.month)
             }
-        }
-    }
 
-    private fun loadMonth(month: YearMonthUiModel) {
-        summaryJob?.cancel()
+            is MonthlySummaryUiEvent.OnSaveBudget -> {
 
-        summaryJob = viewModelScope.launch {
-            getMonthlySummaryUseCase(
-                year = month.year,
-                month = month.month
-            ).collect { categories ->
+                saveMonthlyBudget(event.amount)
+                 _uiState.update {
+                     it.copy(
+                         monthlyBudget = event.amount,
+                         isLoading = false,
+                         errorMessage = null
+                     )
+                 }
+            }
 
-                val totalSpent = categories.sumOf { it.spentAmount }
+            MonthlySummaryUiEvent.BudgetEditClicked -> {
 
                 _uiState.update {
+                    it.copy(showMonthlyBudgetSheet = true)
+                }
+            }
+
+            MonthlySummaryUiEvent.CloseBudgetSheet -> {
+                _uiState.update {
+                    it.copy(showMonthlyBudgetSheet = false)
+                }
+            }
+
+            is MonthlySummaryUiEvent.OnCategoryClicked -> {
+                _uiState.update {
                     it.copy(
-                        isLoading = false,
-                        categories = categories,
-                        totalSpent = totalSpent,
-                        errorMessage = null
+                        editingCategory = event.category,
+                        showCategoryBudgetSheet = true
                     )
                 }
             }
+
+            is MonthlySummaryUiEvent.OnSaveCategoryBudget -> {
+                saveCategoryBudget(
+                    category = _uiState.value.editingCategory!!.category,
+                    amount = event.amount,
+                )
+
+
+            }
+
+            MonthlySummaryUiEvent.OnDismissBottomSheet -> {
+                _uiState.update {
+                    it.copy(
+                        editingCategory = null,
+                        showCategoryBudgetSheet = false
+                    )
+                }
+            }
+
         }
     }
 
+    private fun saveCategoryBudget(
+        category: ExpenseCategory,
+        amount: Double
+    ) {
+        viewModelScope.launch {
+            try {saveCategoryBudget(
+                year = uiState.value.selectedMonth.year,
+                month = uiState.value.selectedMonth.month,
+                category = category,
+                amount = amount
+            )
+
+            _uiState.update {
+                it.copy(
+                    editingCategory = null,
+                    showCategoryBudgetSheet = false
+                )
+            }
+        }catch (e: Exception) {
+                emitEffect(
+                    MonthlySummaryUiEffect.ShowError(
+                        "Failed to save budget"
+                    )
+                )
+            }
+        }
+    }
+
+    private fun saveMonthlyBudget(amount: Double) {
+        val state = _uiState.value
+
+        if (amount <= 0) {
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            try {
+                saveMonthlyBudget(
+                    year = state.selectedMonth.year,
+                    month = state.selectedMonth.month,
+                    amount = amount
+                )
+                //Close MonthlyBottomSheet after save
+                _uiState.update {
+                    it.copy(showMonthlyBudgetSheet = false)
+                }
+
+            }catch (e: Exception){
+
+            }
+        }
+    }
+
+    @OptIn(ExperimentalCoroutinesApi::class)
+    private fun observeDashboardData() {
+        _selectedMonth.flatMapLatest { month ->
+
+            combine(
+                getExpenseByMonth(
+                    year = month.year,
+                    month = month.month
+                ),
+                observeMonthlyBudget(
+                    year = month.year,
+                    month = month.month
+                )
+            ) { expenses, budget ->
+
+                val totalAmount = expenses.sumOf { it.amount }
+                var monthlyBudget = budget?.monthlyBudget ?: 0.0
+                var remainingBudget = monthlyBudget - totalAmount
+
+                val categoryBudgets =
+                    budget?.categoryBudgets.orEmpty()
+
+                val categories =
+                    expenses
+                        .groupBy { it.category }
+                        .map { (category, list) ->
+
+                            val spent = list.sumOf { it.amount }
+                            val budgetAmount = categoryBudgets[category]
+
+                            CategorySummaryUiModel(
+                                category = category,
+                                spentAmount = spent,
+                                budgetAmount = budgetAmount
+                            )
+                        }
+                        .sortedByDescending { it.spentAmount }
+
+
+                SummaryAggregate(
+                    // expenses = expenses,
+                    categories = categories,
+                    monthlyBudget = monthlyBudget,
+                    totalAmount = totalAmount,
+                    remainingBudget = remainingBudget
+                )
+            }
+        }
+            .onEach { aggregate ->
+                _uiState.update {
+
+                    it.copy(
+                        isLoading = false,
+                        categories = aggregate.categories,
+                        monthlyBudget = aggregate.monthlyBudget ?: 0.0,
+                        remainingAmount = aggregate.remainingBudget,
+                        totalSpent = aggregate.totalAmount,
+                        errorMessage = null
+                    )
+                    /*  it.copy(
+                          expenses = aggregate.expenses,
+                          categories = aggregate.categories,
+                          monthlyBudget = aggregate.monthlyBudget
+                      )*/
+                }
+            }
+            .launchIn(viewModelScope)
+    }
+
+    /*  private fun loadMonth(month: YearMonthUiModel) {
+          summaryJob?.cancel()
+
+          summaryJob = viewModelScope.launch {
+              getMonthlySummary(
+                  year = month.year,
+                  month = month.month
+              ).collect { categories ->
+
+                  val totalSpent = categories.sumOf { it.spentAmount }
+                  val remainingAmount = _uiState.value.monthlyBudget - totalSpent
+
+
+                  _uiState.update {
+                      it.copy(
+                          isLoading = false,
+                          categories = categories,
+                          totalSpent = totalSpent,
+                          remainingAmount = remainingAmount,
+                          errorMessage = null
+                      )
+                  }
+              }
+          }
+      }
+
+      private fun observeBudget() {
+          viewModelScope.launch {
+              observeMonthlyBudget(
+                  year = uiState.value.selectedMonth.year,
+                  month = uiState.value.selectedMonth.month
+              ).collect { budget ->
+
+                  _uiState.update {
+                      it.copy(
+                        //  budgetAmount = budget?.monthlyBudget ?? 0,
+                          //categoryBudgets = budget?.categoryBudgets.orEmpty()
+                      )
+                  }
+              }
+          }
+      }
+  */
     private fun emitEffect(effect: MonthlySummaryUiEffect) {
         viewModelScope.launch {
             _uiEffect.emit(effect)
         }
     }
 }
+
+

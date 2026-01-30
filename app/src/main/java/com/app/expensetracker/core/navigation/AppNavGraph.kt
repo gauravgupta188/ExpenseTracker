@@ -140,10 +140,18 @@ fun AppNavGraph(
                         navController.navigate(Routes.AddExpense.route)
                     },
                     onViewAllClick = {
-                        navController.navigate(Routes.ExpenseSummary.route)
+                        navController.navigate(Routes.MonthlySummary.route)
+                    },
+                    onBudgetEditClick = {
+                        val month = viewModel.uiState.value.selectedMonth
+
+                        navController.navigate(
+                            Routes.MonthlySummary.routeWithMonth(
+                                year = month.year,
+                                month = month.month
+                            )
+                        )
                     }
-
-
                 )
             }
 
@@ -157,21 +165,20 @@ fun AppNavGraph(
                 )
             }
 
-            composable(Routes.ExpenseSummary.route) {
+            composable(Routes.MonthlySummary.route) {
                 val viewModel : MonthlySummaryViewModel = hiltViewModel()
                 MonthlySummaryScreen(
-                    state = viewModel.uiState.collectAsState().value,
+                    uiState = viewModel.uiState.collectAsState().value,
+                    onEvent = viewModel::onEvent,
                     onBackClick = { navController.popBackStack() },
                     onMonthSelectorClick = { },
                     onAddExpenseClick = {},
                     onViewAllCategoriesClick = {},
                     onCategoryClick = { category ->
                         val month = viewModel.uiState.value.selectedMonth
-                      //  val category = viewModel.uiState.
-
                         navController.navigate(
                             Routes.CategoryDetail.createRoute(
-                                category = category,
+                                category = category.category,
                                 year = month.year,
                                 month = month.month
                             )

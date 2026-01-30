@@ -1,6 +1,8 @@
 package com.app.expensetracker.feature.expense.domain.repository
 
 import com.app.expensetracker.feature.expense.domain.model.Expense
+import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
+import com.app.expensetracker.feature.expense.domain.model.MonthlyBudget
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -24,5 +26,23 @@ interface ExpenseRepository {
     fun getRecentExpenses(
         limit: Int = 10
     ): Flow<List<Expense>>
+
+    fun observeMonthlyBudget(
+        year: Int,
+        month: Int
+    ): Flow<MonthlyBudget?>
+
+    suspend fun saveMonthlyBudget(
+        year: Int,
+        month: Int,
+        amount: Double
+    )
+
+    suspend fun saveCategoryBudget(
+        year: Int,
+        month: Int,
+        category: ExpenseCategory,
+        amount: Double
+    )
 }
 

@@ -4,4 +4,5 @@ sealed interface MonthlySummaryUiEffect {
     object NavigateBack : MonthlySummaryUiEffect
     object NavigateToAddExpense : MonthlySummaryUiEffect
     object OpenMonthPicker : MonthlySummaryUiEffect
+    data class ShowError(val message: String) : MonthlySummaryUiEffect
 }
