@@ -49,6 +49,19 @@ class ExpenseRepositoryImpl(
             .await()
     }
 
+    override suspend fun getExpenseById(expenseId: String): Expense {
+        val snapshot =
+            userExpensesRef()
+                .document(expenseId)
+                .get()
+                .await()
+
+        return snapshot.toObject(ExpenseDto::class.java)
+            ?.toDomain(snapshot.id)
+            ?: throw IllegalStateException("Expense not found")
+    }
+
+
     override suspend fun deleteExpense(expenseId: String) {
         userExpensesRef()
             .document(expenseId)

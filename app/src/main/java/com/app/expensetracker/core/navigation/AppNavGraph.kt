@@ -24,11 +24,19 @@ import com.app.expensetracker.feature.expense.addexpense.ui.AddExpenseScreen
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiEffect
 import com.app.expensetracker.feature.expense.categorydetail.ui.CategoryDetailScreen
 import com.app.expensetracker.feature.expense.categorydetail.viewmodel.CategoryDetailViewModel
+import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect
 
 import com.app.expensetracker.feature.expense.dashboard.ui.DashboardScreen
 import com.app.expensetracker.feature.expense.dashboard.viewmodel.DashboardViewModel
+import com.app.expensetracker.feature.expense.expensedetails.ui.ExpenseDetailScreen
+import com.app.expensetracker.feature.expense.expensedetails.viewmodel.ExpenseDetailViewModel
+import com.app.expensetracker.feature.expense.monthlyexpense.state.MonthlyExpensesUiEffect
+import com.app.expensetracker.feature.expense.monthlyexpense.state.MonthlyExpensesUiEvent
+import com.app.expensetracker.feature.expense.monthlyexpense.ui.MonthlyExpensesScreen
+import com.app.expensetracker.feature.expense.monthlyexpense.viewmodel.MonthlyExpensesViewModel
 import com.app.expensetracker.feature.expense.summary.ui.MonthlySummaryScreen
 import com.app.expensetracker.feature.expense.summary.viewmodel.MonthlySummaryViewModel
+import kotlin.math.exp
 
 @Composable
 fun AppNavGraph(
@@ -140,9 +148,11 @@ fun AppNavGraph(
                         navController.navigate(Routes.AddExpense.route)
                     },
                     onViewAllClick = {
-                        navController.navigate(Routes.MonthlySummary.route)
+                        navController.navigate(Routes.MonthlyExpenses.route)
                     },
-                    onBudgetEditClick = {
+
+
+                 /*   onBudgetEditClick = {
                         val month = viewModel.uiState.value.selectedMonth
 
                         navController.navigate(
@@ -151,8 +161,65 @@ fun AppNavGraph(
                                 month = month.month
                             )
                         )
-                    }
+                    },*/
+                   /* onCategoryClick = {
+                        val month = viewModel.uiState.value.selectedMonth
+                        navController.navigate(
+                            Routes.CategoryDetail.createRoute(
+                                category = it,
+                                year = month.year,
+                                month = month.month
+                            )
+                        )
+                    },
+                    onCategoryViewAllClick = {
+                        val month = viewModel.uiState.value.selectedMonth
+
+                        navController.navigate(
+                            Routes.MonthlySummary.routeWithMonth(
+                                year = month.year,
+                                month = month.month
+                            )
+                        )
+                    }*/
                 )
+
+                LaunchedEffect(Unit) {
+                    viewModel.uiEffect.collect { effect ->
+                        when (effect) {
+                            ExpenseUiEffect.NavigateToMonthlyExpenses ->
+                                navController.navigate(Routes.MonthlyExpenses.route)
+
+                            ExpenseUiEffect.NavigateToAllCategories -> {
+                                val month = viewModel.uiState.value.selectedMonth
+                                navController.navigate(
+                                    Routes.MonthlySummary.routeWithMonth(
+                                        year = month.year,
+                                        month = month.month
+                                    )
+                                )
+                            }
+
+                            is ExpenseUiEffect.NavigateToCategory -> {
+                                val month = viewModel.uiState.value.selectedMonth
+                                navController.navigate(
+                                    Routes.CategoryDetail.createRoute(
+                                        category = effect.category,
+                                        year = month.year,
+                                        month = month.month
+                                    )
+                                )
+                            }
+
+                           is ExpenseUiEffect.NavigateToExpenseDetail -> {
+                                navController.navigate(Routes.ExpenseDetail.createRoute(
+                                    effect.expense.id
+
+                                ))
+                            }
+                        }
+                    }
+                }
             }
 
             composable(Routes.AddExpense.route) {
@@ -166,7 +233,7 @@ fun AppNavGraph(
             }
 
             composable(Routes.MonthlySummary.route) {
-                val viewModel : MonthlySummaryViewModel = hiltViewModel()
+                val viewModel: MonthlySummaryViewModel = hiltViewModel()
                 MonthlySummaryScreen(
                     uiState = viewModel.uiState.collectAsState().value,
                     onEvent = viewModel::onEvent,
@@ -186,6 +253,44 @@ fun AppNavGraph(
                     }
                 )
             }
+            composable(Routes.MonthlyExpenses.route) {
+                val viewModel: MonthlyExpensesViewModel = hiltViewModel()
+
+                MonthlyExpensesScreen(
+                    state = viewModel.uiState.collectAsState().value,
+                    onBackClick = {
+                        viewModel.onEvent(MonthlyExpensesUiEvent.OnBackClicked)
+                    },
+                    onExpenseClick = { expense ->
+                        viewModel.onEvent(
+                            MonthlyExpensesUiEvent.OnExpenseClicked(expense.id)
+                        )
+                    },
+                    onAddExpenseClick = {
+                        viewModel.onEvent(
+                            MonthlyExpensesUiEvent.OnAddExpenseClicked
+                        )
+                    }
+                )
+
+                LaunchedEffect(Unit) {
+                    viewModel.uiEffect.collect { effect ->
+                        when (effect) {
+                            MonthlyExpensesUiEffect.NavigateBack ->
+                                navController.popBackStack()
+
+                            MonthlyExpensesUiEffect.NavigateToAddExpense ->
+                                navController.navigate(Routes.AddExpense.route)
+
+                            is MonthlyExpensesUiEffect.NavigateToExpenseDetail -> {}
+                               /* navController.navigate(
+                                    Routes.ExpenseDetail.createRoute(effect.expenseId)
+                                )*/
+                        }
+                    }
+                }
+            }
+
             composable(
                 route = Routes.CategoryDetail.route,
                 arguments = listOf(
@@ -218,6 +323,14 @@ fun AppNavGraph(
                 }
             }
 
+            composable(Routes.ExpenseDetail.route) {
+                val viewModel: ExpenseDetailViewModel = hiltViewModel()
+
+                ExpenseDetailScreen(
+                    state = viewModel.uiState.collectAsState().value,
+                    onEvent = viewModel::onEvent,
+                )
+            }
 
 
         }

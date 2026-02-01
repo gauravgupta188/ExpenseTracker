@@ -22,12 +22,26 @@ sealed class Routes(val route: String) {
     //Main
     data object Home : Routes("home")
     data object AddExpense : Routes("add_expense")
+
+
     object MonthlySummary : Routes("monthly_summary/{year}/{month}") {
 
         fun routeWithMonth(year: Int, month: Int): String {
             return "monthly_summary/$year/$month"
         }
     }
+
+    // Expenses
+    object MonthlyExpenses : Routes("monthly_expenses")
+
+    // Expenses Details
+    object ExpenseDetail : Routes("expense_detail/{expenseId}"){
+        fun createRoute(expenseId: String): String {
+            return "expense_detail/$expenseId"
+        }
+    }
+
+
     object CategoryDetail : Routes(
         "category_detail/{category}/{year}/{month}"
     ) {

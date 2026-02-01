@@ -1,6 +1,7 @@
 package com.app.expensetracker.feature.expense.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,7 +39,7 @@ fun ExpenseItem(
                 color = Color(0xFFF7F7F7),
                 shape = RoundedCornerShape(16.dp)
             )
-            .padding(16.dp),
+            .padding(16.dp).clickable { onClick() },
         verticalAlignment = Alignment.CenterVertically
     ) {
 

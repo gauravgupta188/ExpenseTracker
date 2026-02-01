@@ -16,7 +16,10 @@ interface ExpenseRepository {
 
     suspend fun updateExpense(expense: Expense)
 
+    suspend fun getExpenseById(expenseId: String): Expense
+
     suspend fun deleteExpense(expenseId: String)
+
 
     fun getExpensesByMonth(
         year: Int,
@@ -24,7 +27,7 @@ interface ExpenseRepository {
     ): Flow<List<Expense>>
 
     fun getRecentExpenses(
-        limit: Int = 10
+        limit: Int = 5
     ): Flow<List<Expense>>
 
     fun observeMonthlyBudget(

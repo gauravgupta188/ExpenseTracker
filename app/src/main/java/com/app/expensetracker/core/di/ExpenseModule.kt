@@ -3,8 +3,11 @@ package com.app.expensetracker.core.di
 import com.app.expensetracker.feature.expense.data.repository.ExpenseRepositoryImpl
 import com.app.expensetracker.feature.expense.domain.repository.ExpenseRepository
 import com.app.expensetracker.feature.expense.domain.usecase.AddExpenseUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.DeleteExpenseUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.GetExpenseByIdUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.GetMonthlySummaryUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.GetRecentExpenseByMonthUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudgetUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.SaveCategoryBudgetUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.SaveMonthlyBudgetUseCase
@@ -36,6 +39,13 @@ object ExpenseModule {
 
     @Provides
     @Singleton
+    fun provideGetRecentExpensesByMonthUseCase(
+        repository: ExpenseRepository
+    ) =
+        GetRecentExpenseByMonthUseCase(repository)
+
+    @Provides
+    @Singleton
     fun provideAddExpenseUseCase(
         repository: ExpenseRepository
     ): AddExpenseUseCase =
@@ -64,5 +74,18 @@ object ExpenseModule {
     fun provideSaveMonthlyBudgetUseCase(
         repository: ExpenseRepository
     ) = SaveMonthlyBudgetUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideDeleteExpenseUseCase(
+        repository: ExpenseRepository
+    ) = DeleteExpenseUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideGetExpenseByIdUseCase(
+        repository: ExpenseRepository
+    ) = GetExpenseByIdUseCase(repository)
+
 
 }

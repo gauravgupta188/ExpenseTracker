@@ -11,6 +11,7 @@ import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
 import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudgetUseCase
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.expense.domain.model.DashboardAggregate
+import com.app.expensetracker.feature.expense.domain.usecase.GetRecentExpenseByMonthUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -31,7 +32,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val getExpensesByMonth: GetExpensesByMonthUseCase,
-    private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase
+    private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
+    private val getRecentExpenses: GetRecentExpenseByMonthUseCase,
 
 ) : ViewModel() {
 
@@ -59,6 +61,7 @@ class DashboardViewModel @Inject constructor(
 
     init {
         observeDashboardData()
+        observeRecentExpenses()
     }
 
     fun onMonthSelected(month: YearMonthUiModel) {
@@ -84,7 +87,7 @@ class DashboardViewModel @Inject constructor(
                 // Handle navigation or UI logic for adding expense
             }
             is ExpenseUiEvent.ExpenseClicked -> {
-                // Handle navigation to details
+                emitEffect(ExpenseUiEffect.NavigateToExpenseDetail(event.expense))
             }
 
             is ExpenseUiEvent.OnMonthSelected -> {
@@ -178,63 +181,74 @@ class DashboardViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
-/*
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeExpenses() {
-        _selectedMonth
-            .flatMapLatest { month ->
-                getExpensesByMonth(
-                    year = month.year,
-                    month = month.month
-                )
-            }
-            .onEach { expenses ->
-                val total = expenses.sumOf { it.amount }
-                val topCategories =
-                    expenses
-                        .groupBy { it.category }
-                        .map { (category, list) ->
-                            CategorySummaryUiModel(
-                                category = category,
-                                spentAmount = list.sumOf { it.amount }
-                            )
-                        }
-                        .sortedByDescending { it.spentAmount }
-                        .take(3)
-
+    private fun observeRecentExpenses() {
+        getRecentExpenses()
+            .onEach { recent ->
                 _uiState.update {
-                    it.copy(
-                        expenses = expenses,
-                        totalAmount = total,
-                        isLoading = false,
-                        topCategories = topCategories
-                    )
+                    it.copy(recentExpenses = recent)
                 }
             }
             .launchIn(viewModelScope)
     }
 
-    private fun observeBudget() {
-        viewModelScope.launch {
-            observeMonthlyBudget(
-                year = uiState.value.selectedMonth.year,
-                month = uiState.value.selectedMonth.month
-            ).collect { budget ->
 
-                val remaining =
-                    (budget?.monthlyBudget ?: 0.0) - uiState.value.totalAmount
+    /*
 
-                _uiState.update {
-                    it.copy(
-                        monthlyBudget = budget?.monthlyBudget ?: 0.0,
-                        remainingBudget = remaining.coerceAtLeast(0.0)
+        @OptIn(ExperimentalCoroutinesApi::class)
+        private fun observeExpenses() {
+            _selectedMonth
+                .flatMapLatest { month ->
+                    getExpensesByMonth(
+                        year = month.year,
+                        month = month.month
                     )
+                }
+                .onEach { expenses ->
+                    val total = expenses.sumOf { it.amount }
+                    val topCategories =
+                        expenses
+                            .groupBy { it.category }
+                            .map { (category, list) ->
+                                CategorySummaryUiModel(
+                                    category = category,
+                                    spentAmount = list.sumOf { it.amount }
+                                )
+                            }
+                            .sortedByDescending { it.spentAmount }
+                            .take(3)
+
+                    _uiState.update {
+                        it.copy(
+                            expenses = expenses,
+                            totalAmount = total,
+                            isLoading = false,
+                            topCategories = topCategories
+                        )
+                    }
+                }
+                .launchIn(viewModelScope)
+        }
+
+        private fun observeBudget() {
+            viewModelScope.launch {
+                observeMonthlyBudget(
+                    year = uiState.value.selectedMonth.year,
+                    month = uiState.value.selectedMonth.month
+                ).collect { budget ->
+
+                    val remaining =
+                        (budget?.monthlyBudget ?: 0.0) - uiState.value.totalAmount
+
+                    _uiState.update {
+                        it.copy(
+                            monthlyBudget = budget?.monthlyBudget ?: 0.0,
+                            remainingBudget = remaining.coerceAtLeast(0.0)
+                        )
+                    }
                 }
             }
         }
-    }
-*/
+    */
 
 
     private fun emitEffect(effect: ExpenseUiEffect) {

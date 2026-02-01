@@ -25,6 +25,7 @@ import com.app.expensetracker.feature.expense.component.ExpenseSectionHeader
 import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardTopAppBar
 import com.app.expensetracker.feature.expense.component.ExpenseItem
 import com.app.expensetracker.feature.expense.dashboard.ui.component.MonthlySnapshotCard
+import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -34,7 +35,6 @@ fun DashboardScreen(
     onEvent: (ExpenseUiEvent) -> Unit,
     onAddExpenseClick: () -> Unit,
     onViewAllClick: () -> Unit,
-    onBudgetEditClick: () -> Unit
 ) {
 
     val scrollBehavior =
@@ -74,7 +74,7 @@ fun DashboardScreen(
                         spend = state.totalAmount,
                         remaining = state.remainingBudget,
                         monthlyBudget = state.monthlyBudget,
-                        onBudgetEditClick = {  onBudgetEditClick() }
+                        onBudgetEditClick = {  onEvent(ExpenseUiEvent.OnViewAllCategoriesClicked)}
                     )
                 }
 
@@ -83,14 +83,12 @@ fun DashboardScreen(
                         CategorySection(
                             categories = state.topCategories,
                             onCategoryClick = { category ->
-                                onEvent(
-                                    ExpenseUiEvent.OnCategoryClicked(category)
-                                )
+
+                                onEvent(ExpenseUiEvent.OnCategoryClicked(category))
+
                             },
                             onViewAllClick = {
-                                onEvent(
-                                    ExpenseUiEvent.OnViewAllCategoriesClicked
-                                )
+                               onEvent(ExpenseUiEvent.OnViewAllCategoriesClicked)
                             }
                         )
                     }
@@ -103,8 +101,12 @@ fun DashboardScreen(
                     )
                 }
 
-                items(state.expenses.size) { index ->
-                    ExpenseItem(expense = state.expenses[index])
+                items(state.recentExpenses.size) { index ->
+                    ExpenseItem(expense = state.recentExpenses[index],
+                        onClick = {
+                            onEvent(ExpenseUiEvent.ExpenseClicked(expense = state.recentExpenses[index]))
+                        }
+                        )
                 }
             }
         }

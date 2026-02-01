@@ -15,6 +15,7 @@ data class ExpenseUiState(
     val selectedMonth: YearMonthUiModel,
 
     val expenses: List<Expense> = emptyList(),
+    val recentExpenses: List<Expense> = emptyList(),
     val totalAmount: Double = 0.0,
     val monthlyBudget: Double = 0.0,
     val remainingBudget: Double = 0.0,

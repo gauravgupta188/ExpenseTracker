@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.monthlyexpense.ui
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.FloatingActionButton
@@ -11,8 +12,10 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.app.expensetracker.core.components.AppTopBar
+import com.app.expensetracker.core.utils.formatDateTime
 import com.app.expensetracker.feature.expense.component.ExpenseItem
 import com.app.expensetracker.feature.expense.domain.model.Expense
+import com.app.expensetracker.feature.expense.monthlyexpense.state.MonthlyExpensesUiState
 import com.app.expensetracker.feature.expense.monthlyexpense.ui.component.DateHeader
 import com.app.expensetracker.feature.expense.monthlyexpense.ui.component.MonthSummaryStrip
 
@@ -26,7 +29,7 @@ fun MonthlyExpensesScreen(
     Scaffold(
         topBar = {
             AppTopBar(
-                title = state.month.label,
+                title = state.selectedMonth.label,
                 onBackClick = onBackClick
             )
         },
@@ -56,7 +59,7 @@ fun MonthlyExpensesScreen(
 
                 item {
                     DateHeader(
-                        label = date.formatFriendly()
+                        label = formatDateTime(date)
                     )
                 }
 

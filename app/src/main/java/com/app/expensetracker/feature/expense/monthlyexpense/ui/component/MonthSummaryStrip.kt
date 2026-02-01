@@ -20,7 +20,7 @@ fun MonthSummaryStrip(
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Text("Total: ₹${total.formatAmount()}")
+        Text("Total: ₹${total}")
         Text("$count expenses")
     }
 }
