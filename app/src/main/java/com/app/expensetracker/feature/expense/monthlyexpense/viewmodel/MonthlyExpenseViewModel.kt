@@ -44,9 +44,9 @@ class MonthlyExpensesViewModel @Inject constructor(
         MutableSharedFlow<MonthlyExpensesUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
-    init {
+   /* init {
         observeExpenses()
-    }
+    }*/
 
     // -------------------------
     // Public API
@@ -85,8 +85,8 @@ class MonthlyExpensesViewModel @Inject constructor(
     // -------------------------
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeExpenses() {
-        _selectedMonth
+     fun observeExpenses(monthFlow: StateFlow<YearMonthUiModel>) {
+        monthFlow
             .flatMapLatest { month ->
                 getExpensesByMonth(
                     year = month.year,

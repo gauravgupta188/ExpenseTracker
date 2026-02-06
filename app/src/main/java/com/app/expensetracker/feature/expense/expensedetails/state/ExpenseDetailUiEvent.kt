@@ -9,4 +9,6 @@ sealed class ExpenseDetailUiEvent {
     object OnDeleteClicked : ExpenseDetailUiEvent()
 
     object OnConfirmDelete : ExpenseDetailUiEvent()
+
+    object  OnDismissDeleteDialog : ExpenseDetailUiEvent()
 }

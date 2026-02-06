@@ -18,5 +18,7 @@ sealed class ExpenseUiEvent {
     ) : ExpenseUiEvent()
 
     object OnViewAllCategoriesClicked : ExpenseUiEvent()
+
+    object DismissMonthPicker : ExpenseUiEvent()
     // other events
 }

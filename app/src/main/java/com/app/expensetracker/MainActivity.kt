@@ -17,6 +17,7 @@ import androidx.navigation.compose.rememberNavController
 import com.app.expensetracker.core.navigation.AppNavGraph
 import com.app.expensetracker.core.ui.theme.ExpenseTrackerTheme
 import com.app.expensetracker.core.viewmodel.AppStartViewModel
+import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -52,6 +53,8 @@ fun InitApp() {
     val isFirebaseLoggedIn = appStartViewModel.isLoggedIn
         .collectAsState().value
 
+    val appDateViewModel: AppDateViewModel = hiltViewModel()
+
 
     ExpenseTrackerTheme(
         darkTheme = isDarkTheme
@@ -60,7 +63,8 @@ fun InitApp() {
 
             AppNavGraph(
                 navController = navController,
-                isLoggedIn = isFirebaseLoggedIn // replace later with real state
+                isLoggedIn = isFirebaseLoggedIn,
+                appDateViewModel = appDateViewModel
             )
 
     }

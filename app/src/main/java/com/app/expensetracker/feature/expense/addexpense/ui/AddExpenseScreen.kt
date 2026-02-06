@@ -28,6 +28,7 @@ import com.app.expensetracker.core.components.AppTopBar
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEffect
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEvent
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiState
+import com.app.expensetracker.feature.expense.addexpense.state.ExpenseFormMode
 import com.app.expensetracker.feature.expense.addexpense.ui.component.AmountInput
 import com.app.expensetracker.feature.expense.addexpense.ui.component.AppTimePickerDialog
 import com.app.expensetracker.feature.expense.addexpense.ui.component.CategoryBottomSheet
@@ -66,7 +67,7 @@ fun AddExpenseScreen(
 
     AppScaffold(
         topBar = {
-            AppTopBar(title = "Add Expense", onBackClick = onBack)
+            AppTopBar(title = if (uiState.mode is ExpenseFormMode.Edit) "Edit Expense" else "Add Expense", onBackClick = onBack)
         },
         snackbarHostState = snackbarHostState,
 
@@ -83,7 +84,7 @@ fun AddExpenseScreen(
                         .padding(16.dp)
                         .height(56.dp)
                 ) {
-                    Text("Save Expense")
+                    Text(if (uiState.mode is ExpenseFormMode.Edit) "Update Expense" else "Save Expense")
                 }
             }
         }

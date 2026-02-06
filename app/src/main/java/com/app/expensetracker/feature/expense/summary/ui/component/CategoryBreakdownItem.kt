@@ -29,7 +29,7 @@ fun CategoryBreakdownItem(
 ) {
     Column(
         modifier = modifier
-            .padding(horizontal = 16.dp, vertical = 8.dp)
+            .padding(vertical = 8.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(MaterialTheme.colorScheme.surface)
             .clickable { onEditClick() }

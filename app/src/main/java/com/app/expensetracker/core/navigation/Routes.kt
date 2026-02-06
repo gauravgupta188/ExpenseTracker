@@ -22,6 +22,11 @@ sealed class Routes(val route: String) {
     //Main
     data object Home : Routes("home")
     data object AddExpense : Routes("add_expense")
+    data object EditExpense : Routes("edit_expense/{expenseId}"){
+        fun createRoute(expenseId: String): String {
+            return "edit_expense/$expenseId"
+        }
+    }
 
 
     object MonthlySummary : Routes("monthly_summary/{year}/{month}") {

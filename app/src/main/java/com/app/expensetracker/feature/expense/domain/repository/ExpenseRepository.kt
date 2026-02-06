@@ -16,7 +16,7 @@ interface ExpenseRepository {
 
     suspend fun updateExpense(expense: Expense)
 
-    suspend fun getExpenseById(expenseId: String): Expense
+     fun observeExpenseById(expenseId: String): Flow<Expense>
 
     suspend fun deleteExpense(expenseId: String)
 

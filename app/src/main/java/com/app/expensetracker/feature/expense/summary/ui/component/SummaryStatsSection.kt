@@ -24,7 +24,7 @@ fun SummaryStatsSection(
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, end = 16.dp, top = 16.dp)
+            .padding(top = 16.dp)
     ) {
 
         Row(

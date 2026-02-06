@@ -5,6 +5,7 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 data class AddExpenseUiState(
+    val mode: ExpenseFormMode = ExpenseFormMode.Add,
     val amount: String = "",
     val selectedCategory: ExpenseCategory? = null,
     val selectedDate: LocalDateTime = LocalDateTime.now(),

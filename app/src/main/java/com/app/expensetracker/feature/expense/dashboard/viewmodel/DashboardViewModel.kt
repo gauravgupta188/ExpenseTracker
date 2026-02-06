@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.core.utils.generateMonths
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect
+import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect.*
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
@@ -12,6 +13,7 @@ import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudge
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.expense.domain.model.DashboardAggregate
 import com.app.expensetracker.feature.expense.domain.usecase.GetRecentExpenseByMonthUseCase
+import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -34,8 +36,7 @@ class DashboardViewModel @Inject constructor(
     private val getExpensesByMonth: GetExpensesByMonthUseCase,
     private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
     private val getRecentExpenses: GetRecentExpenseByMonthUseCase,
-
-) : ViewModel() {
+    ) : ViewModel() {
 
     private val _selectedMonth =
         MutableStateFlow(YearMonthUiModel.current())
@@ -51,7 +52,7 @@ class DashboardViewModel @Inject constructor(
         MutableStateFlow(
             ExpenseUiState(
                 months = months,
-                selectedMonth = _selectedMonth.value,
+                selectedMonth =_selectedMonth.value,
                 isLoading = true
             )
         )
@@ -60,7 +61,7 @@ class DashboardViewModel @Inject constructor(
         _uiState.asStateFlow()
 
     init {
-        observeDashboardData()
+        //observeDashboardData()
         observeRecentExpenses()
     }
 
@@ -87,20 +88,21 @@ class DashboardViewModel @Inject constructor(
                 // Handle navigation or UI logic for adding expense
             }
             is ExpenseUiEvent.ExpenseClicked -> {
-                emitEffect(ExpenseUiEffect.NavigateToExpenseDetail(event.expense))
+                emitEffect(NavigateToExpenseDetail(event.expense))
             }
 
             is ExpenseUiEvent.OnMonthSelected -> {
-                if (event.month != uiState.value.selectedMonth) {
+                _uiState.update { it.copy(showMonthPicker = true) }
+               /* if (event.month != uiState.value.selectedMonth) {
                     _uiState.update { it.copy(selectedMonth = event.month,isLoading = true) }
-                }
+                }*/
                // observeExpenses()
 
             }
 
             is ExpenseUiEvent.OnCategoryClicked -> {
                 emitEffect(
-                    ExpenseUiEffect.NavigateToCategory(event.category)
+                    NavigateToCategory(event.category)
                 )
             }
 
@@ -109,13 +111,17 @@ class DashboardViewModel @Inject constructor(
                     ExpenseUiEffect.NavigateToAllCategories
                 )
             }
+
+            ExpenseUiEvent.DismissMonthPicker -> {
+                _uiState.update { it.copy(showMonthPicker = false) }
+            }
         }
     }
 
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeDashboardData() {
-        _selectedMonth.flatMapLatest { month ->
+     fun observeDashboardData(monthFlow: StateFlow<YearMonthUiModel>) {
+        monthFlow.flatMapLatest { month ->
 
                 combine(
                     getExpensesByMonth(

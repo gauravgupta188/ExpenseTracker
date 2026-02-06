@@ -22,6 +22,7 @@ fun AppScaffold(
     snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     containerColor: Color = BrandBlack,
     content: @Composable (PaddingValues) -> Unit,
+    //floatingActionButton: @Composable (() -> Unit)? = null
 ) {
     Scaffold(
         modifier = modifier.fillMaxSize(),

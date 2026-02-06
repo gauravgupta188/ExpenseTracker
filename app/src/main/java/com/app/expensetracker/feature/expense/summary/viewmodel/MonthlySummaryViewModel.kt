@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.summary.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
@@ -32,7 +33,6 @@ import kotlin.collections.orEmpty
 @HiltViewModel
 class MonthlySummaryViewModel @Inject constructor(
     private val getExpenseByMonth: GetExpensesByMonthUseCase,
-    private val getMonthlySummary: GetMonthlySummaryUseCase,
     private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
     private val saveMonthlyBudget: SaveMonthlyBudgetUseCase,
     private val saveCategoryBudget: SaveCategoryBudgetUseCase
@@ -50,9 +50,9 @@ class MonthlySummaryViewModel @Inject constructor(
     private val _selectedMonth =
         MutableStateFlow(YearMonthUiModel.current())
 
-    init {
+  /*  init {
         observeDashboardData()
-    }
+    }*/
 
     fun onEvent(event: MonthlySummaryUiEvent) {
         when (event) {
@@ -187,8 +187,9 @@ class MonthlySummaryViewModel @Inject constructor(
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    private fun observeDashboardData() {
-        _selectedMonth.flatMapLatest { month ->
+     fun observeSummaryData(monthFlow: StateFlow<YearMonthUiModel>) {
+        monthFlow.flatMapLatest { month ->
+Log.d("TAG", "observeSummaryData: $month")
 
             combine(
                 getExpenseByMonth(

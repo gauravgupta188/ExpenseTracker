@@ -11,6 +11,7 @@ import com.app.expensetracker.feature.expense.domain.usecase.GetRecentExpenseByM
 import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudgetUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.SaveCategoryBudgetUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.SaveMonthlyBudgetUseCase
+import com.app.expensetracker.feature.expense.domain.usecase.UpdateExpenseUseCase
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
@@ -50,6 +51,13 @@ object ExpenseModule {
         repository: ExpenseRepository
     ): AddExpenseUseCase =
         AddExpenseUseCase(repository)
+
+    @Provides
+    @Singleton
+    fun provideUpdateExpenseUseCase(
+        repository: ExpenseRepository
+    ) = UpdateExpenseUseCase(repository)
+
 
     @Provides
     @Singleton

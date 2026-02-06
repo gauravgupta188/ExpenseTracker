@@ -6,6 +6,7 @@ import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.feature.expense.domain.usecase.DeleteExpenseUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpenseByIdUseCase
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEffect
+import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEffect.*
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEvent
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -47,32 +48,42 @@ class ExpenseDetailViewModel @Inject constructor(
         when (event) {
 
             ExpenseDetailUiEvent.OnBackClicked ->
-                emitEffect(ExpenseDetailUiEffect.NavigateBack)
+                emitEffect(NavigateBack)
 
             ExpenseDetailUiEvent.OnEditClicked ->
                 emitEffect(
-                    ExpenseDetailUiEffect.NavigateToEdit(expenseId)
+                    NavigateToEdit(expenseId)
                 )
 
             ExpenseDetailUiEvent.OnDeleteClicked -> {
-                // UI will show confirmation dialog
+                _uiState.update { it.copy(isDeleteConfirmationVisible = true) }
             }
 
-            ExpenseDetailUiEvent.OnConfirmDelete ->
+            ExpenseDetailUiEvent.OnConfirmDelete -> {
+                _uiState.update { it.copy(isDeleteConfirmationVisible = false) }
                 deleteExpense()
+
+                //  emitEffect(NavigateBack)
+            }
+
+            ExpenseDetailUiEvent.OnDismissDeleteDialog -> {
+                _uiState.update { it.copy(isDeleteConfirmationVisible = false) }
+            }
         }
     }
 
     private fun loadExpense() {
         viewModelScope.launch {
             try {
-                val expense = getExpenseById(expenseId)
-                _uiState.update {
-                    it.copy(
-                        expense = expense,
-                        isLoading = false
-                    )
-                }
+               getExpenseById(expenseId).collect { expense ->
+                   _uiState.update {
+                       it.copy(
+                           expense = expense,
+                           isLoading = false
+                       )
+                   }
+               }
+
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
@@ -86,16 +97,19 @@ class ExpenseDetailViewModel @Inject constructor(
 
     private fun deleteExpense() {
         viewModelScope.launch {
-            try {
+            runCatching {
                 deleteExpense(expenseId)
-                emitEffect(ExpenseDetailUiEffect.NavigateBack)
-            } catch (e: Exception) {
-                emitEffect(
-                    ExpenseDetailUiEffect.ShowError(
-                        "Failed to delete expense"
-                    )
-                )
+
+            }.onSuccess {
+                emitEffect(NavigateBack)
             }
+                .onFailure {
+                    emitEffect(
+                        ShowError(
+                            "Failed to delete expense"
+                        )
+                    )
+                }
         }
     }
 

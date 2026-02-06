@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.dp
 fun SpendingInsightCard(message: String) {
     Box(
         modifier = Modifier
-            .padding(16.dp)
+            .padding(vertical = 16.dp)
             .clip(RoundedCornerShape(20.dp))
             .background(
                 Brush.horizontalGradient(

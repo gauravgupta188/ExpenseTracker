@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.domain.model
 
+import com.app.expensetracker.core.utils.toDisplayDateTime
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -17,4 +18,12 @@ data class Expense(
     val date: LocalDateTime,
     val month: Int,
     val year: Int
-)
+) {
+    fun formattedDateTime(): String {
+        return date.toDisplayDateTime()
+    }
+
+    fun displayAmount() : String {
+        return "₹${"%,.1f".format(amount)}"
+    }
+}

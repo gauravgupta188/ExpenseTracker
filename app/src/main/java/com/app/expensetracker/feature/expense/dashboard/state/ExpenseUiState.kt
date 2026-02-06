@@ -20,6 +20,8 @@ data class ExpenseUiState(
     val monthlyBudget: Double = 0.0,
     val remainingBudget: Double = 0.0,
 
-    val topCategories: List<CategorySummaryUiModel> = emptyList()
+    val topCategories: List<CategorySummaryUiModel> = emptyList(),
+
+    val showMonthPicker: Boolean = false,
 )
   //Effects

@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.data.repository
 
+import android.util.Log
 import com.app.expensetracker.feature.expense.data.mapper.toDomain
 import com.app.expensetracker.feature.expense.data.mapper.toDto
 import com.app.expensetracker.feature.expense.data.model.ExpenseDto
@@ -17,6 +18,7 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.tasks.await
+import kotlin.collections.orEmpty
 
 class ExpenseRepositoryImpl(
     private val firestore: FirebaseFirestore,
@@ -49,17 +51,36 @@ class ExpenseRepositoryImpl(
             .await()
     }
 
-    override suspend fun getExpenseById(expenseId: String): Expense {
-        val snapshot =
+    override fun observeExpenseById(expenseId: String): Flow<Expense> = callbackFlow {
+        val listenerRegistration =
             userExpensesRef()
                 .document(expenseId)
-                .get()
-                .await()
+                .addSnapshotListener { snapshot, error ->
 
-        return snapshot.toObject(ExpenseDto::class.java)
-            ?.toDomain(snapshot.id)
-            ?: throw IllegalStateException("Expense not found")
+                    if (error != null) {
+                        close(error)
+                        return@addSnapshotListener
+                    }
+
+                    if (snapshot == null || !snapshot.exists()) {
+                        close(IllegalStateException("Expense not found"))
+                        return@addSnapshotListener
+                    }
+
+                    val expense = snapshot
+                        .toObject(ExpenseDto::class.java)
+                        ?.toDomain(snapshot.id)
+
+                    if (expense != null) {
+                        trySend(expense)
+                    }
+                }
+
+        awaitClose {
+            listenerRegistration.remove()
+        }
     }
+
 
 
     override suspend fun deleteExpense(expenseId: String) {
@@ -74,6 +95,7 @@ class ExpenseRepositoryImpl(
         month: Int
     ): Flow<List<Expense>> = callbackFlow {
 
+        Log.d("Month",month.toString())
         val listener = userExpensesRef()
             .whereEqualTo("year", year)
             .whereEqualTo("month", month)
@@ -88,6 +110,8 @@ class ExpenseRepositoryImpl(
                     it.toObject(ExpenseDto::class.java)!!
                         .toDomain(it.id)
                 }.orEmpty()
+
+               // Log.d("Expenses",expenses.toString())
 
                 trySend(expenses)
             }

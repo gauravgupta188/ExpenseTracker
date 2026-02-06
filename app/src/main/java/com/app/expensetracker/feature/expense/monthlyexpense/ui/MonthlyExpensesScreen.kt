@@ -1,24 +1,32 @@
 package com.app.expensetracker.feature.expense.monthlyexpense.ui
 
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.unit.dp
 import com.app.expensetracker.core.components.AppTopBar
 import com.app.expensetracker.core.utils.formatDateTime
 import com.app.expensetracker.feature.expense.component.ExpenseItem
+import com.app.expensetracker.feature.expense.dashboard.ui.component.AddExpenseFab
 import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.monthlyexpense.state.MonthlyExpensesUiState
 import com.app.expensetracker.feature.expense.monthlyexpense.ui.component.DateHeader
 import com.app.expensetracker.feature.expense.monthlyexpense.ui.component.MonthSummaryStrip
+import com.app.expensetracker.feature.expense.monthlyexpense.ui.component.MonthlyExpenseAppBar
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MonthlyExpensesScreen(
     state: MonthlyExpensesUiState,
@@ -26,35 +34,43 @@ fun MonthlyExpensesScreen(
     onExpenseClick: (Expense) -> Unit,
     onAddExpenseClick: () -> Unit
 ) {
-    Scaffold(
+
+    val scrollBehavior =
+        TopAppBarDefaults.exitUntilCollapsedScrollBehavior()
+    Scaffold(modifier = Modifier
+        .fillMaxSize()
+        .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            AppTopBar(
-                title = state.selectedMonth.label,
-                onBackClick = onBackClick
+
+            MonthlyExpenseAppBar(
+                subtitle = "Monthly Summary",
+                expenseCount = "${state.groupedExpenses.values.sumOf { it.size }}",
+                total = "${state.totalAmount}",
+                onBackClick = onBackClick,
+                scrollBehavior = scrollBehavior
             )
         },
         floatingActionButton = {
-            FloatingActionButton(
-                onClick = onAddExpenseClick
-            ) {
-                Icon(Icons.Default.Add, contentDescription = "Add expense")
-            }
+            AddExpenseFab(
+                onAddExpenseClick = onAddExpenseClick
+            )
         }
     ) { padding ->
 
         LazyColumn(
             modifier = Modifier
                 .padding(padding)
-                .fillMaxSize()
+                .fillMaxSize(),
+            contentPadding = PaddingValues(16.dp)
         ) {
 
-            item {
+          /*  item {
                 MonthSummaryStrip(
                     total = state.totalAmount,
                     count = state.groupedExpenses.values.sumOf { it.size }
                 )
             }
-
+*/
             state.groupedExpenses.forEach { (date, expenses) ->
 
                 item {

@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.dashboard.ui
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -24,8 +25,13 @@ import com.app.expensetracker.feature.expense.dashboard.ui.component.CategorySec
 import com.app.expensetracker.feature.expense.component.ExpenseSectionHeader
 import com.app.expensetracker.feature.expense.dashboard.ui.component.DashboardTopAppBar
 import com.app.expensetracker.feature.expense.component.ExpenseItem
+import com.app.expensetracker.feature.expense.dashboard.ui.component.MonthPickerBottomSheet
 import com.app.expensetracker.feature.expense.dashboard.ui.component.MonthlySnapshotCard
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
+import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
+import com.app.expensetracker.feature.expense.ui.state.AppDateEvent
+import com.app.expensetracker.feature.expense.ui.state.AppDateUiState
+import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,6 +41,11 @@ fun DashboardScreen(
     onEvent: (ExpenseUiEvent) -> Unit,
     onAddExpenseClick: () -> Unit,
     onViewAllClick: () -> Unit,
+    selectedMonth : YearMonthUiModel,
+    onPreviousMonth: () -> Unit,
+    onNextMonth: () -> Unit,
+    appDateUiState: AppDateUiState,
+    onDateEvent: (AppDateEvent) -> Unit,
 ) {
 
     val scrollBehavior =
@@ -44,7 +55,14 @@ fun DashboardScreen(
         .fillMaxSize()
         .nestedScroll(scrollBehavior.nestedScrollConnection),
         topBar = {
-            DashboardTopAppBar(scrollBehavior = scrollBehavior)
+            DashboardTopAppBar(
+                scrollBehavior = scrollBehavior,
+                title = "Hello kumar",
+                subtitle = appDateUiState.selectedMonth.label,
+                monthSelectorClick = {
+                    onDateEvent(AppDateEvent.OpenPicker)
+                }
+            )
         },
 
         floatingActionButton = {
@@ -110,6 +128,18 @@ fun DashboardScreen(
                 }
             }
         }
+
+    if (appDateUiState.isPickerVisible) {
+        MonthPickerBottomSheet(
+            selectedMonth = appDateUiState.selectedMonth,
+            onMonthSelected = { month ->
+                onDateEvent(AppDateEvent.MonthSelected(month))
+            },
+            onDismiss = {
+                onDateEvent(AppDateEvent.ClosePicker)
+            }
+        )
+    }
     }
 
 
