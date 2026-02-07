@@ -14,9 +14,10 @@ import androidx.compose.ui.text.font.FontWeight
 @Composable
 fun ExpenseSectionHeader(
     modifier: Modifier = Modifier.Companion,
-    onViewAllClick: () -> Unit,
+    onViewAllClick: () -> Unit = {},
     title: String,
-    subTitle:String = "View All"
+    subTitle: String = "View All",
+    isShowViewAll: Boolean = true
 ) {
     Row(
         modifier = modifier.fillMaxWidth(),
@@ -28,13 +29,13 @@ fun ExpenseSectionHeader(
             style = MaterialTheme.typography.titleMedium,
             modifier = Modifier.Companion.weight(1f)
         )
-
-        TextButton(onClick = onViewAllClick) {
-            Text(
-                text = subTitle,
-                color = MaterialTheme.colorScheme.secondary,
-                style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Companion.SemiBold)
-            )
-        }
+        if (isShowViewAll)
+            TextButton(onClick = onViewAllClick) {
+                Text(
+                    text = subTitle,
+                    color = MaterialTheme.colorScheme.secondary,
+                    style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.Companion.SemiBold)
+                )
+            }
     }
 }

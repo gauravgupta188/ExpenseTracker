@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.categorydetail.ui.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,20 +22,21 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.core.utils.formatCurrency
-import com.app.expensetracker.ui.theme.BrandOrange
 
 @Composable
 fun CategoryBudgetCard(
     totalSpent: Double,
     budget: Double?,
     progress: Float,
+    budgetUsageColor : Color,
+    onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-            .offset(y = (-32).dp),
+            .fillMaxWidth().clickable(onClick = onEditClick)
+            .padding(top = 16.dp),
+
         shape = RoundedCornerShape(20.dp),
         elevation = CardDefaults.cardElevation(6.dp)
     ) {
@@ -55,11 +57,13 @@ fun CategoryBudgetCard(
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text("TARGET BUDGET", style = MaterialTheme.typography.labelSmall)
-                    Text(
-                        text = budget?.let { formatCurrency(it) } ?: "--",
-                        style = MaterialTheme.typography.titleMedium,
-                        color = MaterialTheme.colorScheme.secondary
-                    )
+                    if (budget != null) {
+                        Text(
+                            text =  if(budget > 0) formatCurrency(budget) else "Tap to set budget" ,
+                            style = if(budget > 0) MaterialTheme.typography.titleMedium else MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.secondary
+                        )
+                    }
                 }
             }
 
@@ -67,7 +71,7 @@ fun CategoryBudgetCard(
 
             LinearProgressIndicator(
                 progress = progress,
-                color = MaterialTheme.colorScheme.secondary,
+                color = budgetUsageColor,
                 trackColor = Color.LightGray,
                 modifier = Modifier
                     .fillMaxWidth()

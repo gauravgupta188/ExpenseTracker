@@ -19,6 +19,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
+import com.app.expensetracker.feature.expense.ui.mapper.color
 
 @Composable
 fun CategoryBreakdownItem(
@@ -75,7 +76,7 @@ fun CategoryBreakdownItem(
                 color = if (model.isOverBudget)
                     MaterialTheme.colorScheme.error
                 else
-                    MaterialTheme.colorScheme.primary
+                   model.category.color
             )
 
             Spacer(modifier = Modifier.height(4.dp))

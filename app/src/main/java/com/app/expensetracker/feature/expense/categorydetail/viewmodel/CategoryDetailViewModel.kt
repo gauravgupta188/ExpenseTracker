@@ -6,9 +6,12 @@ import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiEffect
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiEvent
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiState
+import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect.NavigateToExpenseDetail
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.domain.repository.ExpenseRepository
+import com.app.expensetracker.feature.expense.domain.usecase.SaveCategoryBudgetUseCase
+import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEffect
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,7 +25,8 @@ import javax.inject.Inject
 @HiltViewModel
 class CategoryDetailViewModel @Inject constructor(
     private val repository: ExpenseRepository,
-    savedStateHandle: SavedStateHandle
+    savedStateHandle: SavedStateHandle,
+    private val saveCategoryBudget: SaveCategoryBudgetUseCase
 ) : ViewModel() {
 
     private val category =
@@ -46,6 +50,21 @@ class CategoryDetailViewModel @Inject constructor(
 
     init {
         observeExpenses()
+        observeBudget()
+    }
+
+    private fun observeBudget() {
+        viewModelScope.launch {
+            repository.observeMonthlyBudget(year, month)
+                .collect { budget ->
+                    val budgetOfCategory = budget?.categoryBudgets[category] ?: 0.0
+                    _uiState.update {
+                        it.copy(
+                            budgetAmount = budgetOfCategory
+                        )
+                    }
+                }
+        }
     }
 
     private fun observeExpenses() {
@@ -74,6 +93,59 @@ class CategoryDetailViewModel @Inject constructor(
 
             CategoryDetailUiEvent.OnFilterClicked ->
                 emitEffect(CategoryDetailUiEffect.OpenFilter)
+
+            is CategoryDetailUiEvent.ExpenseClicked -> {
+                emitEffect(CategoryDetailUiEffect.NavigateToExpenseDetail(event.expense))
+            }
+            CategoryDetailUiEvent.OnViewAllExpensesClicked -> {
+
+            }
+
+            is CategoryDetailUiEvent.OnSaveCategoryBudget -> {
+                saveCategoryBudget(
+                    category = category,
+                    amount = event.amount,
+                )
+            }
+            CategoryDetailUiEvent.OnDismissBottomSheet -> {
+                _uiState.update {
+                    it.copy(showCategoryBudgetSheet = false)
+                }
+            }
+
+            CategoryDetailUiEvent.OnCategoryClicked -> {
+                _uiState.update {
+                    it.copy(showCategoryBudgetSheet = true)
+                }
+            }
+        }
+    }
+
+
+    private fun saveCategoryBudget(
+        category: ExpenseCategory,
+        amount: Double
+    ) {
+        viewModelScope.launch {
+            try {saveCategoryBudget(
+                year = year,
+                month = month,
+                category = category,
+                amount = amount
+            )
+
+                _uiState.update {
+                    it.copy(
+                        showCategoryBudgetSheet = false
+                    )
+                }
+            }catch (e: Exception) {
+                emitEffect(
+                    CategoryDetailUiEffect.ShowError(
+                        "Failed to save budget"
+                    )
+                )
+            }
         }
     }
 

@@ -77,32 +77,23 @@ fun MonthlySnapshotCard(
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
 
-                    Text(
-                        text = "₹${"%,.2f".format(remaining)}",
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = budgetColor
-                    )
+                    if(monthlyBudget > 0){
+                        Text(
+                            text ="₹${"%,.2f".format(remaining)}",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = budgetColor
+                        )
+                    }else {
+                        Text(
+                            text = "Tap to set budget",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = budgetColor
+                        )
+                    }
+
+
                 }
-                //Spacer(modifier = Modifier.weight(1f))
-               /* Box(
-                    modifier = Modifier
-                        .size(32.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        modifier = Modifier.size(16.dp),
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }*/
             }
-
-
         }
     }
 }

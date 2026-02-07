@@ -1,6 +1,7 @@
 package com.app.expensetracker.feature.expense.summary.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEvent
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
 import com.app.expensetracker.feature.expense.summary.ui.component.CategoryBreakdownItem
+import com.app.expensetracker.feature.expense.summary.ui.component.CategoryBreakdownItems
 import com.app.expensetracker.feature.expense.summary.ui.component.EditCategoryBudgetSheet
 import com.app.expensetracker.feature.expense.summary.ui.component.EditMonthlyBudgetSheet
 import com.app.expensetracker.feature.expense.summary.ui.component.SpendingInsightCard
@@ -69,7 +71,8 @@ fun MonthlySummaryScreen(
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
                 .padding(padding),
-            contentPadding = PaddingValues(16.dp)
+            contentPadding = PaddingValues(16.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
         ) {
 
             /* ---------- STATS ---------- */
@@ -99,8 +102,8 @@ fun MonthlySummaryScreen(
             item {
                 Box() {
                     ExpenseSectionHeader(
-                        onViewAllClick = onViewAllCategoriesClick,
-                        title = "Category Breakdown"
+                        title = "Category Breakdown",
+                        isShowViewAll = false
                     )
                 }
             }
@@ -110,12 +113,12 @@ fun MonthlySummaryScreen(
                 items = uiState.categories,
                 key = { it.category.name }
             ) { category ->
-                CategoryBreakdownItem(
+                CategoryBreakdownItems(
                     model = category,
                     onCategoryClick = {
                         onCategoryClick(category)
                     },
-                    onEditClick = {
+                    onEditBudgetClick = {
                         onEvent(MonthlySummaryUiEvent.OnCategoryClicked(category))
                     },
 

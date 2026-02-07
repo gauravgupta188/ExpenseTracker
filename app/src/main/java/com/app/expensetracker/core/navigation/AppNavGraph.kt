@@ -170,9 +170,6 @@ fun AppNavGraph(
                     onViewAllClick = {
                         navController.navigate(Routes.MonthlyExpenses.route)
                     },
-                    selectedMonth = appDateState.selectedMonth,
-                    onPreviousMonth = appDateViewModel::moveToPreviousMonth,
-                    onNextMonth = appDateViewModel::moveToNextMonth,
                     appDateUiState = appDateState,
                     onDateEvent = appDateViewModel::onEvent,
                 )
@@ -344,6 +341,17 @@ fun AppNavGraph(
                             CategoryDetailUiEffect.OpenFilter -> {
                                 // future
                             }
+
+                            is CategoryDetailUiEffect.NavigateToExpenseDetail -> {
+                                navController.navigate(
+                                    Routes.ExpenseDetail.createRoute(
+                                        effect.expense.id
+
+                                    )
+                                )
+                            }
+
+                            is CategoryDetailUiEffect.ShowError -> {}
                         }
                     }
                 }

@@ -71,9 +71,6 @@ private fun MainRootHost(
                 onViewAllClick = {
                     navController.navigate(Routes.MonthlyExpenses.route)
                 },
-                selectedMonth = appDateState.selectedMonth,
-                onPreviousMonth = appDateViewModel::moveToPreviousMonth,
-                onNextMonth = appDateViewModel::moveToNextMonth,
                 appDateUiState = appDateState,
                 onDateEvent = appDateViewModel::onEvent,
             )

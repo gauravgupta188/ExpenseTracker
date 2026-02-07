@@ -36,14 +36,10 @@ import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DashboardScreen(
-    modifier: Modifier = Modifier,
     state: ExpenseUiState,
     onEvent: (ExpenseUiEvent) -> Unit,
     onAddExpenseClick: () -> Unit,
     onViewAllClick: () -> Unit,
-    selectedMonth : YearMonthUiModel,
-    onPreviousMonth: () -> Unit,
-    onNextMonth: () -> Unit,
     appDateUiState: AppDateUiState,
     onDateEvent: (AppDateEvent) -> Unit,
 ) {

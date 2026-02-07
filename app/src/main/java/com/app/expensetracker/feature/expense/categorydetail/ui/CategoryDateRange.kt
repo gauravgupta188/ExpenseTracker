@@ -28,8 +28,7 @@ fun CategoryDateRange(
 ) {
     Card(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp),
+            .fillMaxWidth(),
         shape = RoundedCornerShape(16.dp)
     ) {
         Row(
@@ -51,13 +50,13 @@ fun CategoryDateRange(
                 modifier = Modifier.weight(1f)
             )
 
-            IconButton(onClick = onFilterClick) {
+          /*  IconButton(onClick = onFilterClick) {
                 Icon(
                     imageVector = Icons.Default.FilterList,
                     contentDescription = "Filter",
                     tint = MaterialTheme.colorScheme.secondary
                 )
-            }
+            }*/
         }
     }
 }

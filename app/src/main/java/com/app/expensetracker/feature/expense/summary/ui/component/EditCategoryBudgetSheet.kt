@@ -43,7 +43,7 @@ fun EditCategoryBudgetSheet(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ){
-            Text("Set Budget for ${category.value} current budget is $currentBudget", style = MaterialTheme.typography.titleMedium)
+            Text("Set Budget for ${category.value}", style = MaterialTheme.typography.titleMedium)
             Spacer(modifier = Modifier.height(12.dp))
 
             OutlinedTextField(

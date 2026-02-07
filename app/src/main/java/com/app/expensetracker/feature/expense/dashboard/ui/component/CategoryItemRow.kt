@@ -16,6 +16,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.feature.expense.dashboard.ui.model.color
+import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.expense.ui.mapper.color
 import com.app.expensetracker.feature.expense.ui.mapper.displayName
@@ -62,7 +64,7 @@ fun CategoryItemRow(
         LinearProgressIndicator(
             progress = model.progress,
             modifier = Modifier.fillMaxWidth(),
-            color = model.category.color,
+            color = model.usageLevel.color(),
             trackColor = MaterialTheme.colorScheme.surfaceVariant
         )
     }

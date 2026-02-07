@@ -33,9 +33,11 @@ import androidx.compose.ui.unit.dp
 fun SummaryStatCard(
     title: String,
     amount: Double,
+    formattedAmount : String,
     footerText: String,
     footerColor: Color,
     isEdit : Boolean = false,
+    budgetColor : Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
     budgetClick: () -> Unit = {}
 ) {
@@ -64,9 +66,9 @@ fun SummaryStatCard(
             Row(verticalAlignment = Alignment.CenterVertically,
                 ) {
                 Text(
-                    text = "₹ ${"%,.0f".format(amount)}",
+                    text = formattedAmount,
                     style = MaterialTheme.typography.headlineSmall,
-                    color = MaterialTheme.colorScheme.primary
+                    color = budgetColor
                 )
                 Spacer(Modifier.weight(1f))
 

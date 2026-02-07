@@ -10,6 +10,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.feature.expense.dashboard.ui.model.color
+import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
 
 @Composable
 fun SummaryStatsSection(
@@ -38,6 +40,7 @@ fun SummaryStatsSection(
                 footerText = if (spendingChangePercent > 0) "$spendingChangePercent% vs last month" else "",
                 footerColor = if (isSpendingDown) Color(0xFF2E7D32) else Color.Red,
                 modifier = Modifier.weight(1f),
+                formattedAmount = "₹ ${"%,.0f".format(totalSpent)}"
 
             )
 
@@ -48,7 +51,9 @@ fun SummaryStatsSection(
                 footerColor = Color.Gray,
                 modifier = Modifier.weight(1f),
                 isEdit = true,
-                budgetClick = {onBudgetEditClick()}
+                budgetClick = {onBudgetEditClick()},
+                budgetColor = monthlyUsageLevel(totalSpent,budgetAmount).color(),
+                formattedAmount = if(budgetAmount > 0) "₹ ${"%,.0f".format(remainingAmount)}" else "No budget set"
             )
         }
     }

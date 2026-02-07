@@ -12,6 +12,7 @@ data class CategoryDetailUiState(
     val budgetAmount: Double? = null,
 
     val expenses: List<Expense> = emptyList(),
+    val showCategoryBudgetSheet: Boolean = false,
 
     val isLoading: Boolean = false,
     val errorMessage: String? = null

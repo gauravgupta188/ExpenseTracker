@@ -93,11 +93,6 @@ class DashboardViewModel @Inject constructor(
 
             is ExpenseUiEvent.OnMonthSelected -> {
                 _uiState.update { it.copy(showMonthPicker = true) }
-               /* if (event.month != uiState.value.selectedMonth) {
-                    _uiState.update { it.copy(selectedMonth = event.month,isLoading = true) }
-                }*/
-               // observeExpenses()
-
             }
 
             is ExpenseUiEvent.OnCategoryClicked -> {
@@ -196,66 +191,6 @@ class DashboardViewModel @Inject constructor(
             }
             .launchIn(viewModelScope)
     }
-
-
-    /*
-
-        @OptIn(ExperimentalCoroutinesApi::class)
-        private fun observeExpenses() {
-            _selectedMonth
-                .flatMapLatest { month ->
-                    getExpensesByMonth(
-                        year = month.year,
-                        month = month.month
-                    )
-                }
-                .onEach { expenses ->
-                    val total = expenses.sumOf { it.amount }
-                    val topCategories =
-                        expenses
-                            .groupBy { it.category }
-                            .map { (category, list) ->
-                                CategorySummaryUiModel(
-                                    category = category,
-                                    spentAmount = list.sumOf { it.amount }
-                                )
-                            }
-                            .sortedByDescending { it.spentAmount }
-                            .take(3)
-
-                    _uiState.update {
-                        it.copy(
-                            expenses = expenses,
-                            totalAmount = total,
-                            isLoading = false,
-                            topCategories = topCategories
-                        )
-                    }
-                }
-                .launchIn(viewModelScope)
-        }
-
-        private fun observeBudget() {
-            viewModelScope.launch {
-                observeMonthlyBudget(
-                    year = uiState.value.selectedMonth.year,
-                    month = uiState.value.selectedMonth.month
-                ).collect { budget ->
-
-                    val remaining =
-                        (budget?.monthlyBudget ?: 0.0) - uiState.value.totalAmount
-
-                    _uiState.update {
-                        it.copy(
-                            monthlyBudget = budget?.monthlyBudget ?: 0.0,
-                            remainingBudget = remaining.coerceAtLeast(0.0)
-                        )
-                    }
-                }
-            }
-        }
-    */
-
 
     private fun emitEffect(effect: ExpenseUiEffect) {
         viewModelScope.launch {
