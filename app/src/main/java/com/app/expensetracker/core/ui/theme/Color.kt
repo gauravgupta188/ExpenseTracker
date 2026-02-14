@@ -24,7 +24,7 @@ val LightOnPrimaryContainer = Color(0xFF4A2A00)
 val LightSecondary = BrandViolet
 val LightOnSecondary = PureWhite
 val LightSecondaryContainer = Color(0xFFE9D7F5)
-val LightOnSecondaryContainer = Color(0xFF2E004F)
+val LightOnSecondaryContainer = Color(0xFF1A1A1A)
 
 val LightTextPrimary = Color(0xFF1A1A1A)
 val LightTextSecondary = Color(0xFF616161)

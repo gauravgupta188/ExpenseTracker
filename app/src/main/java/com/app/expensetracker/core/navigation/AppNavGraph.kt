@@ -18,6 +18,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.app.expensetracker.core.ui.theme.SplashScreen
 import com.app.expensetracker.feature.auth.login.ui.LoginScreen
 import com.app.expensetracker.feature.auth.login.viewmodel.LoginViewModel
 import com.app.expensetracker.feature.auth.register.ui.RegisterScreen
@@ -42,6 +43,10 @@ import com.app.expensetracker.feature.expense.monthlyexpense.viewmodel.MonthlyEx
 import com.app.expensetracker.feature.expense.summary.ui.MonthlySummaryScreen
 import com.app.expensetracker.feature.expense.summary.viewmodel.MonthlySummaryViewModel
 import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
+import com.app.expensetracker.feature.settings.state.SettingsUiEffect
+import com.app.expensetracker.feature.settings.ui.SettingsScreen
+import com.app.expensetracker.feature.settings.viewmodel.SettingsViewModel
+import kotlinx.coroutines.delay
 
 
 @SuppressLint("UnrememberedGetBackStackEntry")
@@ -53,17 +58,34 @@ fun AppNavGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = if (isLoggedIn) {
-            Routes.MainRoot.route
-        } else {
-            Routes.AuthRoot.route
-        }
+        startDestination = Routes.SplashRoot.route
     ) {
+        navigation(startDestination = Routes.Splash.route, route = Routes.SplashRoot.route) {
+            composable(Routes.Splash.route) {
+                SplashScreen()
+
+                LaunchedEffect(Unit) {
+                    delay(1500) // branding delay
+                    navController.navigate(
+                        if (isLoggedIn) {
+                            Routes.Home.route
+                        } else {
+                            Routes.Login.route
+                        }
+                    ) {
+                        popUpTo(Routes.Splash.route) { inclusive = true }
+                    }
+                }
+            }
+        }
+
         // -------- AUTH --------
         navigation(
             startDestination = Routes.Login.route,
             route = Routes.AuthRoot.route,
         ) {
+
+
             composable(
                 route = Routes.Login.route,
                 enterTransition = { fadeInFast },
@@ -170,6 +192,12 @@ fun AppNavGraph(
                     onViewAllClick = {
                         navController.navigate(Routes.MonthlyExpenses.route)
                     },
+
+                    onSettingsClick = {
+                        navController.navigate(Routes.Settings.route)
+                    },
+
+
                     appDateUiState = appDateState,
                     onDateEvent = appDateViewModel::onEvent,
                 )
@@ -182,14 +210,14 @@ fun AppNavGraph(
 
                             ExpenseUiEffect.NavigateToAllCategories -> {
                                 val month = appDateState.selectedMonth
-                                Log.d("MOnth" ,month.toString())
+                                Log.d("MOnth", month.toString())
                                 val route = Routes.MonthlySummary.routeWithMonth(
                                     year = month.year,
                                     month = month.month
                                 )
-                                Log.d("Route",route)
+                                Log.d("Route", route)
                                 navController.navigate(
-                                 Routes.MonthlySummary.routeWithMonth(
+                                    Routes.MonthlySummary.routeWithMonth(
                                         year = month.year,
                                         month = month.month
                                     )
@@ -369,7 +397,13 @@ fun AppNavGraph(
                     onEvent = viewModel::onEvent,
                     uiEffect = viewModel.uiEffect,
                     onBackClick = { navController.popBackStack() },
-                    onEditClick = { viewModel.uiState.value.expense?.id?.let { expenseId -> navController.navigate(Routes.EditExpense.createRoute(expenseId = expenseId)) } }
+                    onEditClick = {
+                        viewModel.uiState.value.expense?.id?.let { expenseId ->
+                            navController.navigate(
+                                Routes.EditExpense.createRoute(expenseId = expenseId)
+                            )
+                        }
+                    }
                 )
             }
 
@@ -378,7 +412,7 @@ fun AppNavGraph(
                 exitTransition = { slideOutToLeft },
                 popEnterTransition = { slideInFromLeft },
                 popExitTransition = { slideOutToRight },
-                ) {
+            ) {
                 val viewModel: AddExpenseViewModel = hiltViewModel()
 
                 AddExpenseScreen(
@@ -400,10 +434,36 @@ fun AppNavGraph(
         }
 
         composable(Routes.Settings.route) {
-            /*  SettingsScreen(
-                  viewModel = hiltViewModel(),
-                  onBack = { navController.popBackStack() }
-              )*/
+            val viewModel: SettingsViewModel = hiltViewModel()
+
+            SettingsScreen(
+                onEvent = viewModel::onEvent,
+                uiState = viewModel.uiState.collectAsState().value,
+                onBackClick = {
+                    navController.popBackStack()
+                }
+            )
+
+            LaunchedEffect(Unit) {
+                viewModel.uiEffect.collect { effect ->
+                    when (effect) {
+                        SettingsUiEffect.NavigateBack ->
+                            navController.popBackStack()
+
+                        SettingsUiEffect.LogoutSuccess -> {
+                            navController.navigate(Routes.AuthRoot.route) {
+                                popUpTo(0) { inclusive = true }
+                            }
+                        }
+
+                        SettingsUiEffect.NavigateToCurrency -> {}
+                        SettingsUiEffect.NavigateToPasscode -> {}
+                        SettingsUiEffect.NavigateToProfile -> {}
+                        SettingsUiEffect.NavigateToSubscription -> {}
+                        SettingsUiEffect.NavigateToSupport -> {}
+                    }
+                }
+            }
         }
     }
 }

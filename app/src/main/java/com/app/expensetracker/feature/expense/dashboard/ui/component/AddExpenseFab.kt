@@ -19,7 +19,7 @@ fun AddExpenseFab(
 ) {
     FloatingActionButton(
         onClick = { onAddExpenseClick() },
-        containerColor = Color(0xFFFF9800),
+        containerColor = MaterialTheme.colorScheme.secondary,
         modifier = Modifier.size(64.dp),
         contentColor = MaterialTheme.colorScheme.primary,
         shape = CircleShape,

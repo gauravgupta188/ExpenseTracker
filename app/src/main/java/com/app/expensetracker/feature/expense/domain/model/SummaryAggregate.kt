@@ -8,4 +8,5 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
     val monthlyBudget: Double?,
     val totalAmount: Double,
     val remainingBudget: Double,
+     val month : YearMonthUiModel
 )

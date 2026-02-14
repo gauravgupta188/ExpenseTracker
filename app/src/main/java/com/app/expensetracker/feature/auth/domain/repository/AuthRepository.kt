@@ -6,6 +6,8 @@ interface AuthRepository {
     suspend fun register(email: String, password: String): AuthUser
     suspend fun login(email: String, password: String): AuthUser
     fun getCurrentUser(): AuthUser?
+    suspend fun logout()
+
     suspend fun loginWithGoogle(idToken: String)
     fun isUserLoggedIn(): Boolean
 }

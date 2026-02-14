@@ -7,5 +7,9 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
     val totalAmount: Double,
     val monthlyBudget: Double?,
     val remainingBudget: Double,
-    val topCategories: List<CategorySummaryUiModel>
+    val selectedMonth: YearMonthUiModel,
+    val topCategories: List<CategorySummaryUiModel>,
+    val allCategories: List<CategorySummaryUiModel>?,
+    val recentExpenses: List<Expense> = emptyList(),
+     val monthHighlights: MonthHighlightsUi? = null
 )

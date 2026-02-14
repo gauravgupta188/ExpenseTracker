@@ -21,9 +21,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCircularIcon
 import com.app.expensetracker.core.utils.formatDateTime
+import com.app.expensetracker.core.utils.formattedCurrencyWithAmount
 import com.app.expensetracker.feature.expense.domain.model.Expense
+import com.app.expensetracker.feature.expense.ui.mapper.icon
+import kotlin.math.max
 
 
 @Composable
@@ -34,54 +40,41 @@ fun ExpenseItem(
 ) {
     Row(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxWidth().clickable { onClick() }
             .background(
-                color = Color(0xFFF7F7F7),
+                color = MaterialTheme.colorScheme.background,
                 shape = RoundedCornerShape(16.dp)
-            )
-            .padding(16.dp).clickable { onClick() },
+            ),
         verticalAlignment = Alignment.CenterVertically
     ) {
 
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .background(MaterialTheme.colorScheme.secondary, CircleShape),
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                imageVector = Icons.Default.Preview,
-                contentDescription = null,
-                tint = Color.White
-            )
-        }
 
-        Spacer(Modifier.width(12.dp))
+        AppCircularIcon(expense.category.icon)
+
+        Spacer(Modifier.width(16.dp))
 
         Column(modifier = Modifier.weight(1f)) {
 
             Text(
-                text = expense.note?.uppercase() ?: "",
-                style = MaterialTheme.typography.bodyLarge
+                text = expense.note?.trim() ?: "",
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Medium,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
             )
             Text(
                 text = formatDateTime(expense.date),
                 style = MaterialTheme.typography.bodySmall,
-                color = Color.Gray
+                color = MaterialTheme.colorScheme.onSurfaceVariant
             )
-
-
-            /*  Text(
-                  text = expense.note?:"",
-                  style = MaterialTheme.typography.bodySmall,
-                  color = Color.Gray
-              )*/
         }
 
+
         Text(
-            text = expense.amount.toString(),
-            color = Color(0xFFFF9800),
-            style = MaterialTheme.typography.bodyLarge
+            text = formattedCurrencyWithAmount(amount = expense.amount),
+            fontWeight = FontWeight.SemiBold,
+            style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onSurface
         )
     }
 

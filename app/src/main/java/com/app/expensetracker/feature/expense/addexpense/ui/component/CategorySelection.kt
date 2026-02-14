@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEvent
+import com.app.expensetracker.feature.expense.component.ExpenseSectionHeader
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 
 @Composable
@@ -29,24 +30,10 @@ fun CategorySelection(
 ) {
     Column(modifier = modifier.fillMaxWidth()) {
 
-        Row(modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-            ) {
-            Text(
-                text = "Category",
-                style = MaterialTheme.typography.titleMedium
-            )
 
-            Text(
-                modifier = Modifier.clickable{ onViewAllClick() },
-                text = "View All",
-                style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = MaterialTheme.colorScheme.primary
-            )
-        }
+        ExpenseSectionHeader(onViewAllClick = onViewAllClick, title = "Category")
 
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(16.dp))
 
         LazyHorizontalGrid(
             modifier = Modifier.fillMaxWidth().height(96.dp),

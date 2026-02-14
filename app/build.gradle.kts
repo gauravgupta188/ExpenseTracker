@@ -67,6 +67,8 @@ dependencies {
 
     /* -------------------- SPLASH SCREEN -------------------- */
     implementation(libs.androidx.core.splashscreen)
+    implementation("com.google.android.material:material:1.11.0")
+
 
     /* -------------------- HILT -------------------- */
     implementation(libs.hilt.android)

@@ -40,7 +40,8 @@ fun DashboardTopAppBar(
     scrollBehavior: TopAppBarScrollBehavior,
     title : String,
     subtitle : String = "",
-    monthSelectorClick : () -> Unit
+    monthSelectorClick : () -> Unit,
+    settlingClick : () -> Unit
 ) {
     val collapsedFraction = scrollBehavior.state.collapsedFraction
     LargeTopAppBar(
@@ -113,7 +114,7 @@ fun DashboardTopAppBar(
         actions = {
 
 
-            IconButton(onClick = { /* Settings */ }) {
+            IconButton(onClick = { settlingClick() }) {
                 Icon(
                     imageVector = Icons.Default.Settings,
                     contentDescription = null,

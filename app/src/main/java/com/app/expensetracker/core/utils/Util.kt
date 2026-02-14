@@ -1,6 +1,12 @@
 package com.app.expensetracker.core.utils
 
-fun formatCurrency(amount: Double): String =
-    "₹%,.2f".format(amount)
+import java.text.DecimalFormat
 
+fun formattedAmount(amount: Double): String =
+    "%,.2f".format(amount)
+
+fun getDefaultCurrency() : String = "₹"
+
+fun formattedCurrencyWithAmount(amount: Double): String =
+    "${getDefaultCurrency()}${amount.formatAmount()}"
 

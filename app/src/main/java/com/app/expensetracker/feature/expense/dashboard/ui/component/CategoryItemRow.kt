@@ -41,7 +41,7 @@ fun CategoryItemRow(
             Icon(
                 imageVector = model.category.icon,
                 contentDescription = null,
-                tint = model.category.color
+                tint = model.usageLevel.color()
             )
 
             Spacer(Modifier.width(12.dp))
@@ -55,7 +55,7 @@ fun CategoryItemRow(
             Text(
                 text = "₹${model.spentAmount.toInt()}",
                 style = MaterialTheme.typography.bodyLarge,
-                color = MaterialTheme.colorScheme.primary
+                color = model.usageLevel.color()
             )
         }
 

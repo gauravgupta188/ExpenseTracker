@@ -20,6 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.core.components.AppDatePickerDialog
@@ -94,10 +95,10 @@ fun AddExpenseScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(color = MaterialTheme.colorScheme.onPrimary)
-                .padding(16.dp),
+                .background(color = MaterialTheme.colorScheme.onPrimary),
             contentPadding = PaddingValues(16.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+            verticalArrangement = Arrangement.spacedBy(24.dp, alignment = Alignment.Top),
+
         ) {
 
             item {

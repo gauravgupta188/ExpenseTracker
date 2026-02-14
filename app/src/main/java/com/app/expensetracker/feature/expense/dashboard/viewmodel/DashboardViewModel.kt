@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.dashboard.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.core.utils.generateMonths
@@ -9,6 +10,7 @@ import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiState
+import com.app.expensetracker.feature.expense.data.mapper.mapToMonthHighlightsUi
 import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudgetUseCase
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.expense.domain.model.DashboardAggregate
@@ -23,6 +25,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
@@ -30,13 +33,15 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.time.Year
 import javax.inject.Inject
+import kotlin.collections.component1
+import kotlin.collections.component2
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val getExpensesByMonth: GetExpensesByMonthUseCase,
     private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
     private val getRecentExpenses: GetRecentExpenseByMonthUseCase,
-    ) : ViewModel() {
+) : ViewModel() {
 
     private val _selectedMonth =
         MutableStateFlow(YearMonthUiModel.current())
@@ -52,7 +57,7 @@ class DashboardViewModel @Inject constructor(
         MutableStateFlow(
             ExpenseUiState(
                 months = months,
-                selectedMonth =_selectedMonth.value,
+                selectedMonth = _selectedMonth.value,
                 isLoading = true
             )
         )
@@ -61,12 +66,13 @@ class DashboardViewModel @Inject constructor(
         _uiState.asStateFlow()
 
     init {
-        //observeDashboardData()
         observeRecentExpenses()
+        //observeDashboardData()
+       // updateSelectedMonth()
+
     }
 
     fun onMonthSelected(month: YearMonthUiModel) {
-        _selectedMonth.value = month
         _uiState.update {
             it.copy(
                 selectedMonth = month,
@@ -76,7 +82,6 @@ class DashboardViewModel @Inject constructor(
     }
 
 
-
     fun onEvent(event: ExpenseUiEvent) {
         when (event) {
             is ExpenseUiEvent.DeleteExpense -> {
@@ -84,9 +89,11 @@ class DashboardViewModel @Inject constructor(
                        repository.deleteExpense(event.expense)
                    }*/
             }
+
             ExpenseUiEvent.AddExpenseClicked -> {
                 // Handle navigation or UI logic for adding expense
             }
+
             is ExpenseUiEvent.ExpenseClicked -> {
                 emitEffect(NavigateToExpenseDetail(event.expense))
             }
@@ -103,7 +110,7 @@ class DashboardViewModel @Inject constructor(
 
             ExpenseUiEvent.OnViewAllCategoriesClicked -> {
                 emitEffect(
-                    ExpenseUiEffect.NavigateToAllCategories
+                    NavigateToAllCategories
                 )
             }
 
@@ -113,11 +120,10 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-
-    @OptIn(ExperimentalCoroutinesApi::class)
-     fun observeDashboardData(monthFlow: StateFlow<YearMonthUiModel>) {
+    fun observeDashboardData(monthFlow: StateFlow<YearMonthUiModel>){
         monthFlow.flatMapLatest { month ->
-
+            val isCurrentMonth = monthFlow.value == YearMonthUiModel.current()
+            if (isCurrentMonth) {
                 combine(
                     getExpensesByMonth(
                         year = month.year,
@@ -126,19 +132,14 @@ class DashboardViewModel @Inject constructor(
                     observeMonthlyBudget(
                         year = month.year,
                         month = month.month
-                    )
-                ) { expenses, budget ->
-
+                    ), getRecentExpenses()
+                ) { expenses, budget,recent ->
                     val totalAmount = expenses.sumOf { it.amount }
-
                     var monthlyBudget = budget?.monthlyBudget ?: 0.0
-
-
                     val categoryBudgets =
                         budget?.categoryBudgets.orEmpty()
 
                     var remainingBudget = monthlyBudget - totalAmount
-
 
 
                     val topCategories =
@@ -163,11 +164,79 @@ class DashboardViewModel @Inject constructor(
                         totalAmount = totalAmount,
                         topCategories = topCategories,
                         monthlyBudget = budget?.monthlyBudget,
-                        remainingBudget = remainingBudget
+                        remainingBudget = remainingBudget,
+                        allCategories = null,
+                        selectedMonth = month,
+                        recentExpenses = recent,
+                        monthHighlights = null
                     )
                 }
-            }
-            .onEach { aggregate ->
+            }else{
+                val previousMonth = month.previous()
+                combine(
+                    getExpensesByMonth(
+                        year = month.year,
+                        month = month.month
+                    ),
+                    getExpensesByMonth(year = previousMonth.year, month = previousMonth.month),
+                    observeMonthlyBudget(
+                        year = month.year,
+                        month = month.month
+                    )
+                ) { expenses, previousExpense, budget ->
+
+                    val totalAmount = expenses.sumOf { it.amount }
+
+                    var monthlyBudget = budget?.monthlyBudget ?: 0.0
+
+
+                    val categoryBudgets =
+                        budget?.categoryBudgets.orEmpty()
+
+                    var remainingBudget = monthlyBudget - totalAmount
+
+
+                    val allCategories =
+                        expenses
+                            .groupBy { it.category }
+                            .map { (category, list) ->
+
+                                val spent = list.sumOf { it.amount }
+                                val budgetAmount = categoryBudgets[category]
+
+                                CategorySummaryUiModel(
+                                    category = category,
+                                    spentAmount = spent,
+                                    budgetAmount = budgetAmount
+                                )
+                            }
+                            .sortedByDescending { it.spentAmount }
+
+
+                    val topCategories = allCategories.take(3)
+
+                    val previousMonthTotal = previousExpense.sumOf { it.amount }
+
+                    val highlightsUi =
+                        mapToMonthHighlightsUi(
+                            currentMonthCategories = allCategories,
+                            previousMonthTotal = previousMonthTotal,
+                            currentMonthTotal = totalAmount
+                        )
+
+                    DashboardAggregate(
+                        expenses = expenses,
+                        totalAmount = totalAmount,
+                        topCategories = emptyList(),
+                        monthlyBudget = budget?.monthlyBudget,
+                        remainingBudget = remainingBudget,
+                        allCategories = allCategories,
+                        selectedMonth = month,
+                        monthHighlights = highlightsUi,
+                        recentExpenses = emptyList()
+                    )
+                }
+            } .onEach { aggregate ->
                 _uiState.update {
                     it.copy(
                         expenses = aggregate.expenses,
@@ -175,18 +244,25 @@ class DashboardViewModel @Inject constructor(
                         monthlyBudget = aggregate?.monthlyBudget ?: 0.0,
                         remainingBudget = aggregate.remainingBudget,
                         topCategories = aggregate.topCategories,
+                        allCategories = null,
+                        selectedMonth = aggregate.selectedMonth,
+                        recentExpenses = aggregate.recentExpenses,
+                        monthHighlights = aggregate.monthHighlights,
                         isLoading = false
                     )
                 }
             }
-            .launchIn(viewModelScope)
+        }.launchIn(viewModelScope)
     }
 
     private fun observeRecentExpenses() {
         getRecentExpenses()
             .onEach { recent ->
                 _uiState.update {
-                    it.copy(recentExpenses = recent)
+                    it.copy(
+                        recentExpenses = recent,
+                        monthHighlights = null
+                    )
                 }
             }
             .launchIn(viewModelScope)

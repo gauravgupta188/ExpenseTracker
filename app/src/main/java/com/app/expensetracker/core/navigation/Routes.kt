@@ -14,6 +14,11 @@ sealed class Routes(val route: String) {
     * */
     object AuthRoot : Routes("auth_root")
     object MainRoot : Routes("main_root")
+    object SettingRoot : Routes("setting_root")
+    object SplashRoot : Routes("splash_root")
+    //Splash
+    data object Splash : Routes("splash")
+
     //Auth
     data object Login : Routes("login")
     data object Register : Routes("register")
@@ -58,7 +63,7 @@ sealed class Routes(val route: String) {
             return "category_detail/${category.name}/$year/$month"
         }
     }
-
-    data object Profile : Routes("profile")
+    //Settings
     data object Settings : Routes("settings")
+    data object Profile : Routes("profile")
 }

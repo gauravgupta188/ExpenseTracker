@@ -129,6 +129,11 @@ class AddExpenseViewModel @Inject constructor(
             return
         }
 
+        if (state.note.isBlank()) {
+            emitError("Note is required")
+            return
+        }
+
         val amount = state.amount.toDoubleOrNull()
         if (amount == null || amount <= 0) {
             emitError("Enter a valid amount")

@@ -36,19 +36,19 @@ fun CategoryItem(
         if (isSelected)
             MaterialTheme.colorScheme.primary
         else
-            MaterialTheme.colorScheme.secondary.copy(alpha = 0.1f)
+            MaterialTheme.colorScheme.primary.copy(alpha = 0.1f)
 
     val contentColor =
         if (isSelected)
             MaterialTheme.colorScheme.onPrimary
         else
-            MaterialTheme.colorScheme.secondary
+            MaterialTheme.colorScheme.primary
 
     val labelColor =
         if (isSelected)
             MaterialTheme.colorScheme.primary
         else
-            MaterialTheme.colorScheme.onSecondaryContainer
+            MaterialTheme.colorScheme.onSurfaceVariant
 
     Column(
         modifier = Modifier.width(72.dp)

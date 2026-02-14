@@ -27,10 +27,8 @@ fun CategorySection(
     onViewAllClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.background(Color.White)) {
+    Column() {
         ExpenseSectionHeader(title = "Top Categories", onViewAllClick = onViewAllClick)
-        Spacer(Modifier.height(12.dp))
-
         categories.forEach { category ->
             CategoryItemRow(
                 model = category,

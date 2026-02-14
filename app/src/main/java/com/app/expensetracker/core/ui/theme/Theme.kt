@@ -3,7 +3,10 @@ package com.app.expensetracker.core.ui.theme
 import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Shapes
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
@@ -14,6 +17,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.app.expensetracker.ui.theme.*
 
@@ -90,9 +94,17 @@ fun ExpenseTrackerTheme(
         }
     }
 
+    val appShapes = Shapes(
+        extraSmall = RoundedCornerShape(4.dp),
+        small = RoundedCornerShape(8.dp),
+        medium = RoundedCornerShape(16.dp),   // 👈 Cards
+        large = RoundedCornerShape(24.dp)
+    )
+
     MaterialTheme(
         colorScheme = colorScheme,
         typography = AppTypography,
-        content = content
+        content = content,
+        shapes = appShapes
     )
 }

@@ -1,5 +1,6 @@
 package com.app.expensetracker.feature.expense.addexpense.ui.component
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,6 +14,7 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.core.utils.formatDateTime
 import java.time.LocalDateTime
@@ -22,10 +24,10 @@ fun DateInput(
     date: LocalDateTime,
     onClick: () -> Unit
 ) {
-    Column {
+    Column(modifier = Modifier.background(MaterialTheme.colorScheme.surface)) {
         Text(
             text = "Date",
-            style = MaterialTheme.typography.labelMedium,
+            style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.onSurfaceVariant
         )
 
@@ -47,4 +49,9 @@ fun DateInput(
             )
         }
     }
+
 }
+
+@Composable
+@Preview
+

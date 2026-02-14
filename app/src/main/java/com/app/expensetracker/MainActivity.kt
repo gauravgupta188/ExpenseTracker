@@ -27,17 +27,17 @@ class MainActivity : ComponentActivity() {
     private var isAppReady = false
     override fun onCreate(savedInstanceState: Bundle?) {
 
-        val splashScreen = installSplashScreen()
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        splashScreen.setKeepOnScreenCondition {
+     /*   splashScreen.setKeepOnScreenCondition {
             !isAppReady
         }
 
         lifecycleScope.launch {
             delay(1200) // simulate loading
             isAppReady = true
-        }
+        }*/
 
         setContent {
           InitApp()

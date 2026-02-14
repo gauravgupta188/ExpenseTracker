@@ -1,8 +1,10 @@
 package com.app.expensetracker.feature.expense.dashboard.state
 
 import com.app.expensetracker.feature.expense.domain.model.Expense
+import com.app.expensetracker.feature.expense.domain.model.MonthHighlightsUi
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
+import java.time.Month
 
 /**
  * Immutable UI state for the Expense List screen.
@@ -13,14 +15,18 @@ data class ExpenseUiState(
 
     val months: List<YearMonthUiModel> = emptyList(),
     val selectedMonth: YearMonthUiModel,
+    val        isCurrentMonth: Boolean = true,
 
     val expenses: List<Expense> = emptyList(),
     val recentExpenses: List<Expense> = emptyList(),
+    // Past month only
+    val monthHighlights: MonthHighlightsUi? = null,
     val totalAmount: Double = 0.0,
     val monthlyBudget: Double = 0.0,
     val remainingBudget: Double = 0.0,
 
     val topCategories: List<CategorySummaryUiModel> = emptyList(),
+    val allCategories: List<CategorySummaryUiModel>? = emptyList(),
 
     val showMonthPicker: Boolean = false,
 )

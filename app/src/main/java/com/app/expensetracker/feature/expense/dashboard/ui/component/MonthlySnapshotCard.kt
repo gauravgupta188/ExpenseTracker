@@ -1,28 +1,25 @@
 package com.app.expensetracker.feature.expense.dashboard.ui.component
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCard
+import com.app.expensetracker.core.utils.formattedAmount
+import com.app.expensetracker.core.utils.formattedCurrencyWithAmount
+import com.app.expensetracker.core.utils.getDefaultCurrency
 import com.app.expensetracker.feature.expense.dashboard.ui.model.color
 import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
 
@@ -36,19 +33,8 @@ fun MonthlySnapshotCard(
 ) {
 
     val budgetColor = monthlyUsageLevel(spend,monthlyBudget).color()
-    Card(
-        modifier = modifier.padding(top = 16.dp,).clickable(onClick = onBudgetEditClick),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
-    ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+    AppCard(modifier = Modifier.clickable(onClick = onBudgetEditClick)) {
+        Column{
 
             Text(
                 text = "Total Spent".uppercase(),
@@ -57,12 +43,13 @@ fun MonthlySnapshotCard(
             )
 
             Text(
-                text = "₹${"%,.2f".format(spend)}",
+                text = formattedCurrencyWithAmount(amount = spend),
                 style = MaterialTheme.typography.displaySmall,
-                color = MaterialTheme.colorScheme.primary
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Bold
             )
 
-            HorizontalDivider(thickness = 0.5.dp, color = Color.Gray.copy(alpha = 0.5f), modifier = Modifier.padding(vertical = 16.dp))
+            HorizontalDivider(thickness = 0.4.dp, color = Color.Gray.copy(alpha = 0.3f), modifier = Modifier.padding(vertical = 16.dp))
 
 
 
@@ -79,9 +66,10 @@ fun MonthlySnapshotCard(
 
                     if(monthlyBudget > 0){
                         Text(
-                            text ="₹${"%,.2f".format(remaining)}",
+                            text =formattedCurrencyWithAmount(amount = remaining),
                             style = MaterialTheme.typography.headlineSmall,
-                            color = budgetColor
+                            color = budgetColor,
+                            fontWeight = FontWeight.SemiBold
                         )
                     }else {
                         Text(

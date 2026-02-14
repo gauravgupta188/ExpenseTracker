@@ -28,32 +28,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCard
+import com.app.expensetracker.feature.expense.dashboard.ui.component.EditBudgetIcon
 
 @Composable
 fun SummaryStatCard(
     title: String,
     amount: Double,
-    formattedAmount : String,
+    formattedAmount: String,
     footerText: String,
     footerColor: Color,
-    isEdit : Boolean = false,
-    budgetColor : Color = MaterialTheme.colorScheme.primary,
+    isEdit: Boolean = false,
+    budgetColor: Color = MaterialTheme.colorScheme.primary,
     modifier: Modifier = Modifier,
     budgetClick: () -> Unit = {}
 ) {
-    Card(
+    AppCard(
         modifier = modifier.clickable(onClick = budgetClick),
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 6.dp
-        ),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
-        )
     ) {
-        Column(
-            modifier = Modifier.padding(16.dp)
-        ) {
+        Column {
 
             Text(
                 text = title,
@@ -63,8 +56,9 @@ fun SummaryStatCard(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            Row(verticalAlignment = Alignment.CenterVertically,
-                ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
                 Text(
                     text = formattedAmount,
                     style = MaterialTheme.typography.headlineSmall,
@@ -72,34 +66,18 @@ fun SummaryStatCard(
                 )
                 Spacer(Modifier.weight(1f))
 
+                if (isEdit)
+                    EditBudgetIcon(onClick = {}, iconSize = 16.dp)
 
-                if(isEdit)
-                Box(
-                    modifier = Modifier
-                        .size(16.dp)
-                        .background(
-                            color = MaterialTheme.colorScheme.secondary.copy(alpha = 0.7f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        modifier = Modifier.size(8.dp),
-                        imageVector = Icons.Default.Edit,
-                        contentDescription = null,
-                        tint = Color.White
-                    )
-                }
             }
+                Spacer(modifier = Modifier.height(6.dp))
 
-
-            Spacer(modifier = Modifier.height(6.dp))
-
-            Text(
-                text = footerText,
-                style = MaterialTheme.typography.bodySmall,
-                color = footerColor
-            )
+                Text(
+                    text = footerText,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = footerColor
+                )
+            }
         }
     }
-}
+

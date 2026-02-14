@@ -18,7 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
-import com.app.expensetracker.core.utils.formatCurrency
+import com.app.expensetracker.core.utils.formattedAmount
 import com.app.expensetracker.core.utils.formatDateTime
 import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.ui.mapper.color
@@ -67,7 +67,7 @@ fun CategoryExpenseItem(
         }
 
         Text(
-            text = formatCurrency(expense.amount),
+            text = formattedAmount(expense.amount),
             style = MaterialTheme.typography.titleMedium,
             color = MaterialTheme.colorScheme.primary
         )

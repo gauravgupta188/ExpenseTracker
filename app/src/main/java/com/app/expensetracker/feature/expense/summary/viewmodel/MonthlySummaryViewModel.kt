@@ -231,7 +231,8 @@ Log.d("TAG", "observeSummaryData: $month")
                     categories = categories,
                     monthlyBudget = monthlyBudget,
                     totalAmount = totalAmount,
-                    remainingBudget = remainingBudget
+                    remainingBudget = remainingBudget,
+                    month = month
                 )
             }
         }
@@ -244,6 +245,7 @@ Log.d("TAG", "observeSummaryData: $month")
                         monthlyBudget = aggregate.monthlyBudget ?: 0.0,
                         remainingAmount = aggregate.remainingBudget,
                         totalSpent = aggregate.totalAmount,
+                        selectedMonth = aggregate.month,
                         errorMessage = null
                     )
                     /*  it.copy(

@@ -50,6 +50,10 @@ class AuthRepositoryImpl(
         }
     }
 
+    override suspend fun logout() {
+        firebaseAuth.signOut()
+    }
+
     override suspend fun loginWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential).await()
