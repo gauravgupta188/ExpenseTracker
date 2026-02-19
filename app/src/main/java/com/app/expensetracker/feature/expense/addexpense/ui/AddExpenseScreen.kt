@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -23,6 +25,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppButton
 import com.app.expensetracker.core.components.AppDatePickerDialog
 import com.app.expensetracker.core.components.AppScaffold
 import com.app.expensetracker.core.components.AppTopBar
@@ -73,19 +76,25 @@ fun AddExpenseScreen(
         snackbarHostState = snackbarHostState,
 
         bottomBar = {
-
-            Box(modifier = Modifier.background(MaterialTheme.colorScheme.onPrimary)) {
-                Button(
-                    onClick = {
-                        onEvent(AddExpenseUiEvent.SaveClicked)
-                    },
-                    enabled = !uiState.isLoading,
+            Surface(
+                tonalElevation = 4.dp,
+                shadowElevation = 8.dp
+            ) {
+                Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
-                        .height(56.dp)
+                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .navigationBarsPadding() // 🔥 important
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
-                    Text(if (uiState.mode is ExpenseFormMode.Edit) "Update Expense" else "Save Expense")
+                    AppButton(
+                        text = if (uiState.mode is ExpenseFormMode.Edit)
+                            "Update Expense"
+                        else "Save Expense",
+                        onClick = { onEvent(AddExpenseUiEvent.SaveClicked) },
+                        enabled = !uiState.isLoading,
+                        modifier = Modifier.fillMaxWidth()
+                    )
                 }
             }
         }
@@ -104,6 +113,7 @@ fun AddExpenseScreen(
             item {
                 AmountInput(
                     value = uiState.amount,
+                    currencyItem = uiState.currency,
                     onValueChange = {
                         onEvent(
                             AddExpenseUiEvent.AmountChanged(it)

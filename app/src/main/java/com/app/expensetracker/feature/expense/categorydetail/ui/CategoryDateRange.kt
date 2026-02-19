@@ -18,6 +18,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCard
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 
 @Composable
@@ -26,11 +27,7 @@ fun CategoryDateRange(
     onFilterClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp)
-    ) {
+    AppCard{
         Row(
             modifier = Modifier.padding(16.dp),
             verticalAlignment = Alignment.CenterVertically

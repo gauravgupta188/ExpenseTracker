@@ -20,25 +20,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCard
 import com.app.expensetracker.core.utils.formattedAmount
+import com.app.expensetracker.core.utils.formattedCurrencyWithAmount
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 
 @Composable
 fun CategoryBudgetCard(
     totalSpent: Double,
     budget: Double?,
     progress: Float,
+    currencyItem: CurrencyItem,
     budgetUsageColor : Color,
     onEditClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth().clickable(onClick = onEditClick)
-            .padding(top = 16.dp),
-
-        shape = RoundedCornerShape(20.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ) {
+    AppCard {
         Column(modifier = Modifier.padding(16.dp)) {
 
             Row(
@@ -48,7 +45,10 @@ fun CategoryBudgetCard(
                 Column {
                     Text("TOTAL SPENT", style = MaterialTheme.typography.labelSmall)
                     Text(
-                        text = formattedAmount(totalSpent),
+                        text = formattedCurrencyWithAmount(
+                            amount = totalSpent,
+                            currency = currencyItem
+                        ),
                         style = MaterialTheme.typography.headlineSmall,
                         color = MaterialTheme.colorScheme.primary
                     )
@@ -58,7 +58,10 @@ fun CategoryBudgetCard(
                     Text("TARGET BUDGET", style = MaterialTheme.typography.labelSmall)
                     if (budget != null) {
                         Text(
-                            text =  if(budget > 0) formattedAmount(budget) else "Tap to set budget" ,
+                            text =  if(budget > 0) formattedCurrencyWithAmount(
+                                amount = budget,
+                                currency = currencyItem
+                            ) else "Tap to set budget" ,
                             style = if(budget > 0) MaterialTheme.typography.titleMedium else MaterialTheme.typography.labelSmall,
                             color = MaterialTheme.colorScheme.secondary
                         )

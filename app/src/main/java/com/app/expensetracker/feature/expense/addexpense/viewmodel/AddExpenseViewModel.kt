@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.addexpense.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.core.currency.CurrencyManager
 import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.domain.usecase.AddExpenseUseCase
 import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEffect
@@ -28,7 +29,8 @@ class AddExpenseViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val addExpenseUseCase: AddExpenseUseCase,
     private val getExpenseById: GetExpenseByIdUseCase,
-    private val updateExpenseUseCase: UpdateExpenseUseCase
+    private val updateExpenseUseCase: UpdateExpenseUseCase,
+    private  val currencyManager: CurrencyManager
 ) : ViewModel() {
     private val expenseId: String? =
         savedStateHandle["expenseId"]
@@ -41,11 +43,11 @@ class AddExpenseViewModel @Inject constructor(
     private var pendingDate: LocalDate? = null
 
     init {
+        observeCurrency()
         expenseId?.let { setEditMode(it) }
 
         if (uiState.value.mode is ExpenseFormMode.Edit) {
             expenseId?.let { loadExpense(it) }
-
         }
     }
 
@@ -100,6 +102,16 @@ class AddExpenseViewModel @Inject constructor(
     private fun emitEffect(effect: AddExpenseUiEffect) {
         viewModelScope.launch {
             _uiEffect.emit(effect)
+        }
+    }
+
+    private fun observeCurrency() {
+        viewModelScope.launch {
+            currencyManager.currency.collect { currencyItem ->
+                _uiState.update {
+                    it.copy(currency = currencyItem)
+                }
+            }
         }
     }
 

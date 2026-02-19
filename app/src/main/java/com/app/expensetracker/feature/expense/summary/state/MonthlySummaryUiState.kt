@@ -1,8 +1,11 @@
 package com.app.expensetracker.feature.expense.summary.state
 
+import com.app.expensetracker.core.utils.DEFAULT_CURRENCY_CODE
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
+import com.app.expensetracker.feature.settings.domain.model.CurrencyProvider
 
 data class MonthlySummaryUiState(
     val selectedMonth: YearMonthUiModel,
@@ -20,6 +23,8 @@ data class MonthlySummaryUiState(
    // val categoryBudgets: Map<ExpenseCategory, Double> = emptyMap(),
 
     val showMonthlyBudgetSheet: Boolean = false,
+    val currency: CurrencyItem =
+        CurrencyProvider.getCurrencyByCode(DEFAULT_CURRENCY_CODE),
 
     val editingCategory: CategorySummaryUiModel? = null,
     val showCategoryBudgetSheet: Boolean = false,

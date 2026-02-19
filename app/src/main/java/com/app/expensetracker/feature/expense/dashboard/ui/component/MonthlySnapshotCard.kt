@@ -22,12 +22,14 @@ import com.app.expensetracker.core.utils.formattedCurrencyWithAmount
 import com.app.expensetracker.core.utils.getDefaultCurrency
 import com.app.expensetracker.feature.expense.dashboard.ui.model.color
 import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 
 @Composable
 fun MonthlySnapshotCard(
     spend: Double,
     remaining: Double,
     monthlyBudget:Double,
+    currencyItem: CurrencyItem,
     modifier: Modifier = Modifier,
     onBudgetEditClick:() -> Unit
 ) {
@@ -43,7 +45,7 @@ fun MonthlySnapshotCard(
             )
 
             Text(
-                text = formattedCurrencyWithAmount(amount = spend),
+                text = formattedCurrencyWithAmount(amount = spend, currency = currencyItem),
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Bold
@@ -66,7 +68,7 @@ fun MonthlySnapshotCard(
 
                     if(monthlyBudget > 0){
                         Text(
-                            text =formattedCurrencyWithAmount(amount = remaining),
+                            text =formattedCurrencyWithAmount(amount = remaining, currency = currencyItem),
                             style = MaterialTheme.typography.headlineSmall,
                             color = budgetColor,
                             fontWeight = FontWeight.SemiBold

@@ -4,6 +4,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
@@ -20,7 +21,7 @@ fun AppButton(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
+    enabled: Boolean = true,
     leadingIcon: (@Composable (() -> Unit))? = null
 
 ) {
@@ -29,16 +30,16 @@ fun AppButton(
     Spacer(modifier = Modifier.height(6.dp))
     Button(
         onClick = onClick,
-        enabled = !isLoading,
+        enabled = enabled,
         modifier = modifier
             .fillMaxWidth()
             .height(52.dp),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(20.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = MaterialTheme.colorScheme.primary,
-            disabledContainerColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.4f),
-            contentColor = MaterialTheme.colorScheme.onPrimary,
-            disabledContentColor = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.6f)
+            containerColor = MaterialTheme.colorScheme.secondary,
+            disabledContainerColor = MaterialTheme.colorScheme.secondary.copy(alpha = 0.4f),
+            contentColor = MaterialTheme.colorScheme.onSecondary,
+            disabledContentColor = MaterialTheme.colorScheme.onSecondary.copy(alpha = 0.6f)
         )
 
 

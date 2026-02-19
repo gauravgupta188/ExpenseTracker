@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.categorydetail.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.core.currency.CurrencyManager
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiEffect
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiEvent
 import com.app.expensetracker.feature.expense.categorydetail.state.CategoryDetailUiState
@@ -26,7 +27,8 @@ import javax.inject.Inject
 class CategoryDetailViewModel @Inject constructor(
     private val repository: ExpenseRepository,
     savedStateHandle: SavedStateHandle,
-    private val saveCategoryBudget: SaveCategoryBudgetUseCase
+    private val saveCategoryBudget: SaveCategoryBudgetUseCase,
+    private val currencyManager: CurrencyManager
 ) : ViewModel() {
 
     private val category =
@@ -51,6 +53,7 @@ class CategoryDetailViewModel @Inject constructor(
     init {
         observeExpenses()
         observeBudget()
+        observeCurrency()
     }
 
     private fun observeBudget() {
@@ -116,6 +119,16 @@ class CategoryDetailViewModel @Inject constructor(
             CategoryDetailUiEvent.OnCategoryClicked -> {
                 _uiState.update {
                     it.copy(showCategoryBudgetSheet = true)
+                }
+            }
+        }
+    }
+
+    private fun observeCurrency() {
+        viewModelScope.launch {
+            currencyManager.currency.collect { currencyItem ->
+                _uiState.update {
+                    it.copy(currency = currencyItem)
                 }
             }
         }

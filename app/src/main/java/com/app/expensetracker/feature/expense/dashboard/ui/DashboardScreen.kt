@@ -39,6 +39,7 @@ import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.ui.state.AppDateEvent
 import com.app.expensetracker.feature.expense.ui.state.AppDateUiState
 import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
+import com.app.expensetracker.feature.settings.domain.model.CurrencyProvider
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -97,6 +98,7 @@ fun DashboardScreen(
                     spend = state.totalAmount,
                     remaining = state.remainingBudget,
                     monthlyBudget = state.monthlyBudget,
+                    currencyItem = state.currency,
                     onBudgetEditClick = { onEvent(ExpenseUiEvent.OnViewAllCategoriesClicked) }
                 )
             }
@@ -105,6 +107,7 @@ fun DashboardScreen(
                 item {
                     CategorySection(
                         categories = state.topCategories,
+                        currencyItem = state.currency,
                         onCategoryClick = { category ->
 
                             onEvent(ExpenseUiEvent.OnCategoryClicked(category))
@@ -129,13 +132,11 @@ fun DashboardScreen(
                 items(state.recentExpenses.size) { index ->
                     ExpenseItem(
                         expense = state.recentExpenses[index],
+                        currencyItem = state.currency,
                         onClick = {
                             onEvent(ExpenseUiEvent.ExpenseClicked(expense = state.recentExpenses[index]))
                         }
                     )
-                    Spacer(Modifier.height(8.dp))
-
-                    ExpenseItemDivider()
                 }
             }
 
@@ -172,6 +173,7 @@ fun DashboardScreenPreview() {
         spend = 42850.0,
         remaining = 12150.0,
         monthlyBudget = 60000.0,
+        currencyItem = CurrencyProvider.getCurrencyByCode("INR"),
         onBudgetEditClick = {  }
     )
 }

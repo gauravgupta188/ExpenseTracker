@@ -2,6 +2,7 @@ package com.app.expensetracker.feature.expense.monthlyexpense.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.core.currency.CurrencyManager
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
 import com.app.expensetracker.feature.expense.monthlyexpense.state.MonthlyExpensesUiEffect
@@ -24,7 +25,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MonthlyExpensesViewModel @Inject constructor(
-    private val getExpensesByMonth: GetExpensesByMonthUseCase
+    private val getExpensesByMonth: GetExpensesByMonthUseCase,
+    private val currencyManager: CurrencyManager
 ) : ViewModel() {
 
     private val _selectedMonth =
@@ -44,9 +46,9 @@ class MonthlyExpensesViewModel @Inject constructor(
         MutableSharedFlow<MonthlyExpensesUiEffect>()
     val uiEffect = _uiEffect.asSharedFlow()
 
-   /* init {
-        observeExpenses()
-    }*/
+    init {
+        observeCurrency()
+    }
 
     // -------------------------
     // Public API
@@ -119,6 +121,16 @@ class MonthlyExpensesViewModel @Inject constructor(
     // -------------------------
     // Helpers
     // -------------------------
+
+    private fun observeCurrency() {
+        viewModelScope.launch {
+            currencyManager.currency.collect { currencyItem ->
+                _uiState.update {
+                    it.copy(currency = currencyItem)
+                }
+            }
+        }
+    }
 
     private fun emitEffect(effect: MonthlyExpensesUiEffect) {
         viewModelScope.launch {

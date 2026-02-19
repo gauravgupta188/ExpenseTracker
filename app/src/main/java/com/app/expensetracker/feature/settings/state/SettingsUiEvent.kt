@@ -1,5 +1,8 @@
 package com.app.expensetracker.feature.settings.state
 
+import com.app.expensetracker.feature.expense.addexpense.state.AddExpenseUiEvent
+import java.time.LocalDate
+
 sealed interface SettingsUiEvent {
 
     // Navigation
@@ -12,6 +15,12 @@ sealed interface SettingsUiEvent {
     data object LogoutClicked : SettingsUiEvent
     data object DismissLogoutDialog : SettingsUiEvent
     data object ConfirmLogout : SettingsUiEvent
+    data object DismissCurrencySheet : SettingsUiEvent
+  //  data object ConfirmCurrencyChange : SettingsUiEvent
+    data class ConfirmCurrencyChange(val currency: String) : SettingsUiEvent
+
+
+
 
     // Toggles
     data class NotificationsToggled(val enabled: Boolean) : SettingsUiEvent

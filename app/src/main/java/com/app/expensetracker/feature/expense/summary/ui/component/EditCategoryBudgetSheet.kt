@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppButton
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -55,12 +56,10 @@ fun EditCategoryBudgetSheet(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
+            AppButton(
                 onClick = { onSave(value.toDouble()) },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Save Budget")
-            }
+                text = "Save Budget",
+            )
         }
     }
 }

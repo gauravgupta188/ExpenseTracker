@@ -34,8 +34,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.utils.APP_VERSION
 import com.app.expensetracker.feature.settings.state.SettingsUiEvent
 import com.app.expensetracker.feature.settings.state.SettingsUiState
+import com.app.expensetracker.feature.settings.ui.component.CurrencyBottomSheet
 import com.app.expensetracker.feature.settings.ui.component.LogoutConfirmationDialog
 import com.app.expensetracker.feature.settings.ui.component.PremiumUpgradeCard
 import com.app.expensetracker.feature.settings.ui.component.SettingsNavigationItem
@@ -120,7 +122,7 @@ fun SettingsScreen(
                 SettingsNavigationItem(
                     icon = Icons.Outlined.AttachMoney,
                     title = "Default Currency",
-                    trailingText = "USD ($)",
+                    trailingText = "${uiState.defaultCurrency.code} (${uiState.defaultCurrency.symbol})",
                     onClick = {onEvent(SettingsUiEvent.CurrencyClicked)}
                 )
             }
@@ -194,7 +196,7 @@ fun SettingsScreen(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    text = "Expense Tracker v1.0.0",
+                    text = "Expense Tracker v${APP_VERSION}",
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.labelSmall,
@@ -211,6 +213,14 @@ fun SettingsScreen(
                     onEvent(SettingsUiEvent.DismissLogoutDialog)
                 }
             )
+        }
+
+        if(uiState.showCurrencySheet){
+            CurrencyBottomSheet("USD", onCurrencySelected = {
+                onEvent(SettingsUiEvent.ConfirmCurrencyChange(it))
+            }, onDismiss = {
+                onEvent(SettingsUiEvent.DismissCurrencySheet)
+            })
         }
 
     }

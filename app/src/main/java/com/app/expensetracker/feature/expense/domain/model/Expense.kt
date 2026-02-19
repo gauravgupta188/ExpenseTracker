@@ -24,6 +24,6 @@ data class Expense(
     }
 
     fun displayAmount() : String {
-        return "₹${"%,.1f".format(amount)}"
+        return "${"%,.1f".format(amount)}"
     }
 }

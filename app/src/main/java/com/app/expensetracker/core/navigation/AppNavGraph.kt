@@ -8,10 +8,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
-
 import androidx.credentials.CredentialManager
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -33,7 +31,6 @@ import com.app.expensetracker.feature.expense.categorydetail.viewmodel.CategoryD
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect
 import com.app.expensetracker.feature.expense.dashboard.ui.DashboardScreen
 import com.app.expensetracker.feature.expense.dashboard.viewmodel.DashboardViewModel
-import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEffect
 import com.app.expensetracker.feature.expense.expensedetails.ui.ExpenseDetailScreen
 import com.app.expensetracker.feature.expense.expensedetails.viewmodel.ExpenseDetailViewModel
 import com.app.expensetracker.feature.expense.monthlyexpense.state.MonthlyExpensesUiEffect
@@ -330,7 +327,14 @@ fun AppNavGraph(
                             MonthlyExpensesUiEffect.NavigateToAddExpense ->
                                 navController.navigate(Routes.AddExpense.route)
 
-                            is MonthlyExpensesUiEffect.NavigateToExpenseDetail -> {}
+                            is MonthlyExpensesUiEffect.NavigateToExpenseDetail -> {
+                                navController.navigate(
+                                    Routes.ExpenseDetail.createRoute(
+                                        effect.expenseId
+
+                                    )
+                                )
+                            }
                             /* navController.navigate(
                                  Routes.ExpenseDetail.createRoute(effect.expenseId)
                              )*/

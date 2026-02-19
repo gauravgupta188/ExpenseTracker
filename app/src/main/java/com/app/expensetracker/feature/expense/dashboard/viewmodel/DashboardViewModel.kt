@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.dashboard.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.core.currency.CurrencyManager
 import com.app.expensetracker.core.utils.generateMonths
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect.*
@@ -16,6 +17,7 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
 import com.app.expensetracker.feature.expense.domain.model.DashboardAggregate
 import com.app.expensetracker.feature.expense.domain.usecase.GetRecentExpenseByMonthUseCase
 import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
+import com.app.expensetracker.feature.settings.viewmodel.SettingsViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -41,6 +43,7 @@ class DashboardViewModel @Inject constructor(
     private val getExpensesByMonth: GetExpensesByMonthUseCase,
     private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
     private val getRecentExpenses: GetRecentExpenseByMonthUseCase,
+    private val currencyManager: CurrencyManager
 ) : ViewModel() {
 
     private val _selectedMonth =
@@ -67,6 +70,7 @@ class DashboardViewModel @Inject constructor(
 
     init {
         observeRecentExpenses()
+        observeCurrency()
         //observeDashboardData()
        // updateSelectedMonth()
 
@@ -266,6 +270,16 @@ class DashboardViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun observeCurrency() {
+        viewModelScope.launch {
+            currencyManager.currency.collect { currencyItem ->
+                _uiState.update {
+                    it.copy(currency = currencyItem)
+                }
+            }
+        }
     }
 
     private fun emitEffect(effect: ExpenseUiEffect) {

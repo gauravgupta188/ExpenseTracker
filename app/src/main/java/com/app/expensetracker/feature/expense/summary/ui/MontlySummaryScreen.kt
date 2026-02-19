@@ -80,6 +80,7 @@ fun MonthlySummaryScreen(
                 SummaryStatsSection(
                     totalSpent = uiState.totalSpent,
                     remainingAmount = uiState.remainingAmount,
+                    currencyItem = uiState.currency,
                     budgetAmount = uiState.monthlyBudget,
                     spendingChangePercent = uiState.spendingChangePercent,
                     isSpendingDown = uiState.isSpendingDown,
@@ -118,6 +119,7 @@ fun MonthlySummaryScreen(
                     onCategoryClick = {
                         onCategoryClick(category)
                     },
+                    currencyItem = uiState.currency,
                     onEditBudgetClick = {
                         onEvent(MonthlySummaryUiEvent.OnCategoryClicked(category))
                     },

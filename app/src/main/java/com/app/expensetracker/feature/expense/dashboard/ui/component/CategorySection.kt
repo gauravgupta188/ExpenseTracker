@@ -19,11 +19,13 @@ import androidx.compose.ui.unit.dp
 import com.app.expensetracker.feature.expense.component.ExpenseSectionHeader
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 
 @Composable
 fun CategorySection(
     categories: List<CategorySummaryUiModel>,
     onCategoryClick: (ExpenseCategory) -> Unit,
+    currencyItem: CurrencyItem,
     onViewAllClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -32,6 +34,7 @@ fun CategorySection(
         categories.forEach { category ->
             CategoryItemRow(
                 model = category,
+                currencyItem = currencyItem,
                 onClick = { onCategoryClick(category.category) }
             )
         }

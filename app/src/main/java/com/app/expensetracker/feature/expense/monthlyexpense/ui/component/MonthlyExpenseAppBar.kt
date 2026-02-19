@@ -29,6 +29,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 import com.app.expensetracker.ui.theme.BrandBlack
 
 
@@ -37,6 +38,7 @@ import com.app.expensetracker.ui.theme.BrandBlack
 fun MonthlyExpenseAppBar(
     subtitle: String,
     expenseCount: String,
+    currencyItem: CurrencyItem,
     total: String,
     onBackClick: () -> Unit,
     scrollBehavior: TopAppBarScrollBehavior
@@ -49,7 +51,7 @@ fun MonthlyExpenseAppBar(
                 text = "Expenses", style = MaterialTheme.typography.headlineSmall, maxLines = 1
             )
 
-            if (subtitle.isNotBlank()) {
+
                 AnimatedVisibility(
                     visible = collapsedFraction < 0.6f, enter = fadeIn(), exit = fadeOut()
                 ) {
@@ -63,7 +65,7 @@ fun MonthlyExpenseAppBar(
                                 maxLines = 1
                             )
                             Text(
-                                text = "₹${total}",
+                                text = "${currencyItem.symbol}${total}",
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = Color.White,
                                 maxLines = 1
@@ -71,7 +73,7 @@ fun MonthlyExpenseAppBar(
 
                             /* ───────── Expense Count Chip ───────── */
 
-                          //  Spacer(modifier = Modifier.height(8.dp))
+                            //  Spacer(modifier = Modifier.height(8.dp))
                         }
                         Spacer(modifier = Modifier.weight(1f))
 
@@ -101,7 +103,6 @@ fun MonthlyExpenseAppBar(
                         }
                     }
                 }
-            }
         }
     }, navigationIcon = {
         IconButton(onClick = onBackClick) {

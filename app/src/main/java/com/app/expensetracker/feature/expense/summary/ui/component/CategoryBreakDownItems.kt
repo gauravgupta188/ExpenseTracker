@@ -37,10 +37,12 @@ import com.app.expensetracker.feature.expense.dashboard.ui.model.color
 import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.expense.ui.mapper.icon
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 
 @Composable
 fun CategoryBreakdownItems(
     model: CategorySummaryUiModel,
+    currencyItem: CurrencyItem,
     onCategoryClick: (String) -> Unit,
     onEditBudgetClick: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -83,13 +85,13 @@ fun CategoryBreakdownItems(
 
                 Column(horizontalAlignment = Alignment.End) {
                     Text(
-                        text = "₹${model.spentAmount}",
+                        text = "${currencyItem.symbol}${model.spentAmount}",
                         style = MaterialTheme.typography.titleMedium,
                         color = Color(0xFFFF9800),
                         fontWeight = FontWeight.Bold
                     )
                     Text(
-                        text = if(model.budgetAmount != null) "TARGET: ₹${model.budgetAmount}" else "No budget set",
+                        text = if(model.budgetAmount != null) "TARGET: ${currencyItem.symbol}${model.budgetAmount}" else "No budget set",
                         style = MaterialTheme.typography.labelSmall,
                         color = Color.Gray
                     )

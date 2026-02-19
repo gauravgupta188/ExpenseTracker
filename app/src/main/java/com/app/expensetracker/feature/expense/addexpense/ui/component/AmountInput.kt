@@ -20,10 +20,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 
 @Composable
 fun AmountInput(
     value: String,
+    currencyItem: CurrencyItem,
     onValueChange: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -46,7 +48,7 @@ fun AmountInput(
             horizontalArrangement = Arrangement.Center
         ) {
             Text(
-                text = "₹",
+                text = currencyItem.symbol,
                 style = MaterialTheme.typography.displaySmall,
                 color = MaterialTheme.colorScheme.primary
             )

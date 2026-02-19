@@ -67,7 +67,7 @@ fun SummaryStatCard(
                 Spacer(Modifier.weight(1f))
 
                 if (isEdit)
-                    EditBudgetIcon(onClick = {}, iconSize = 16.dp)
+                    EditBudgetIcon(onClick = {budgetClick()}, iconSize = 16.dp)
 
             }
                 Spacer(modifier = Modifier.height(6.dp))

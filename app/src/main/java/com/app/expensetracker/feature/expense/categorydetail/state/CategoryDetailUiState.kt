@@ -1,8 +1,11 @@
 package com.app.expensetracker.feature.expense.categorydetail.state
 
+import com.app.expensetracker.core.utils.DEFAULT_CURRENCY_CODE
 import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
+import com.app.expensetracker.feature.settings.domain.model.CurrencyProvider
 
 data class CategoryDetailUiState(
     val category: ExpenseCategory,
@@ -13,6 +16,8 @@ data class CategoryDetailUiState(
 
     val expenses: List<Expense> = emptyList(),
     val showCategoryBudgetSheet: Boolean = false,
+    val currency: CurrencyItem =
+        CurrencyProvider.getCurrencyByCode(DEFAULT_CURRENCY_CODE),
 
     val isLoading: Boolean = false,
     val errorMessage: String? = null

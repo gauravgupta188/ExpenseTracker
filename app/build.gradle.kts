@@ -76,6 +76,7 @@ dependencies {
     implementation(libs.androidx.compose.runtime)
     implementation(libs.androidx.runtime)
     implementation(libs.androidx.material3)
+    implementation(libs.androidx.datastore.core)
     ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation.compose)
 
@@ -97,6 +98,13 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.firebase.firestore)
+
+    /*--------------------- DATASTORE ---------------------*/
+    // Preferences DataStore (SharedPreferences like APIs)
+    implementation(libs.androidx.datastore.preferences)
+
+    // Alternatively - without an Android dependency.
+    implementation(libs.androidx.datastore.preferences.core)
 
 
 

@@ -3,7 +3,9 @@ package com.app.expensetracker.feature.expense.categorydetail.ui
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -22,6 +24,7 @@ import com.app.expensetracker.feature.expense.categorydetail.ui.components.Categ
 import com.app.expensetracker.feature.expense.categorydetail.ui.components.CategoryExpenseItem
 import com.app.expensetracker.feature.expense.component.ExpenseItem
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEvent
+import com.app.expensetracker.feature.expense.dashboard.ui.component.ExpenseItemDivider
 import com.app.expensetracker.feature.expense.dashboard.ui.model.color
 import com.app.expensetracker.feature.expense.domain.utils.monthlyUsageLevel
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEvent
@@ -56,8 +59,8 @@ fun CategoryDetailScreen(
                 .fillMaxSize()
                 .padding(padding)
                 .background(Color.White),
-               verticalArrangement = Arrangement.spacedBy(16.dp),
-            contentPadding = PaddingValues(16.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 16.dp)
 
         ) {
 
@@ -66,6 +69,7 @@ fun CategoryDetailScreen(
                     totalSpent = state.totalSpent,
                     budget = state.budgetAmount,
                     progress = state.progress,
+                    currencyItem = state.currency,
                     budgetUsageColor = monthlyUsageLevel(state.totalSpent, state.budgetAmount).color(),
                     onEditClick = {
                         onEvent(CategoryDetailUiEvent.OnCategoryClicked)
@@ -80,10 +84,12 @@ fun CategoryDetailScreen(
                         onEvent(CategoryDetailUiEvent.OnFilterClicked)
                     }
                 )
+                Spacer(Modifier.height(8.dp))
             }
 
             items(state.expenses) { expense ->
                 ExpenseItem(expense = expense,
+                    currencyItem = state.currency,
                     onClick = {
                         onEvent(CategoryDetailUiEvent.ExpenseClicked(expense = expense))
                     }

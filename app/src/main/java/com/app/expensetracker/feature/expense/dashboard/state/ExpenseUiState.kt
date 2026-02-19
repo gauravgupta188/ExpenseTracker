@@ -4,6 +4,8 @@ import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.domain.model.MonthHighlightsUi
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
+import com.app.expensetracker.feature.settings.domain.model.CurrencyProvider
 import java.time.Month
 
 /**
@@ -29,5 +31,7 @@ data class ExpenseUiState(
     val allCategories: List<CategorySummaryUiModel>? = emptyList(),
 
     val showMonthPicker: Boolean = false,
-)
+    val currency: CurrencyItem =
+        CurrencyProvider.getCurrencyByCode("USD"),
+    )
   //Effects

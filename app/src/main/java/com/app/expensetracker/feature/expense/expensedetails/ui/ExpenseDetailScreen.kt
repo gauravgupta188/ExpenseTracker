@@ -1,25 +1,33 @@
 package com.app.expensetracker.feature.expense.expensedetails.ui
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.app.expensetracker.core.components.AppButton
+import com.app.expensetracker.core.components.AppScaffold
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEffect
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEvent
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiState
 import com.app.expensetracker.feature.expense.expensedetails.ui.component.DeleteExpenseAction
 import com.app.expensetracker.feature.expense.expensedetails.ui.component.DeleteExpenseConfirmationDialog
-import com.app.expensetracker.feature.expense.expensedetails.ui.component.EditExpenseButton
 import com.app.expensetracker.feature.expense.expensedetails.ui.component.ExpenseDetailsCard
 import com.app.expensetracker.feature.expense.expensedetails.ui.component.ExpenseDetailsTopAppBar
 import com.app.expensetracker.feature.expense.expensedetails.ui.component.ExpenseHeroCard
@@ -34,71 +42,7 @@ fun ExpenseDetailScreen(
     onBackClick: () -> Unit,
     onEditClick:() -> Unit
     ) {
-   /* Scaffold(
-        topBar = {
-            AppTopBar(
-                title = "Expense Details",
-                onBackClick = {
-                    onEvent(ExpenseDetailUiEvent.OnBackClicked)
-                },
-                actions = {
-                    IconButton(
-                        onClick = {
-                            onEvent(ExpenseDetailUiEvent.OnEditClicked)
-                        }
-                    ) {
-                        Icon(Icons.Default.Edit, null)
-                    }
-                }
-            )
-        }
-    ) { padding ->
-
-        state.expense?.let { expense ->
-            Column(
-                modifier = Modifier
-                    .padding(padding)
-                    .padding(16.dp)
-            ) {
-                Text(
-                    text = "₹${expense.amount}",
-                    style = MaterialTheme.typography.displaySmall
-                )
-
-                Text(expense.category.displayName)
-
-                Spacer(Modifier.height(16.dp))
-
-                Text(formatDateTime(expense.date))
-
-                Spacer(Modifier.height(8.dp))
-
-                expense.note?.takeIf { it.isNotBlank() }?.let {
-                    Text(it)
-                }
-
-                Spacer(Modifier.weight(1f))
-
-                TextButton(
-                    onClick = {
-                        onEvent(ExpenseDetailUiEvent.OnDeleteClicked)
-                    }
-                ) {
-                    Text(
-                        "Delete Expense",
-                        color = MaterialTheme.colorScheme.error
-                    )
-                }
-            }
-        }
-
-        
-
-
-    }
-*/
-    val snackbarHostState = remember { SnackbarHostState() }
-
+     val snackbarHostState = remember { SnackbarHostState() }
     LaunchedEffect(Unit) {
         uiEffect.collect { effect ->
             when (effect) {
@@ -119,27 +63,55 @@ fun ExpenseDetailScreen(
             }
         }
     }
-    Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
+    AppScaffold (
+        snackbarHostState = snackbarHostState,
         topBar = {
             ExpenseDetailsTopAppBar(
                 onBackClick = { onEvent(ExpenseDetailUiEvent.OnBackClicked) },
                 onEditClick = { onEvent(ExpenseDetailUiEvent.OnEditClicked) },
-
             )
+        },
+
+        bottomBar = {
+            Surface(
+                tonalElevation = 4.dp,
+                shadowElevation = 8.dp
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .navigationBarsPadding() // 🔥 important
+                        .padding(horizontal = 16.dp, vertical = 12.dp)
+                ) {
+
+                    Column() {
+                        AppButton("Edit Expense",{
+                            onEvent(ExpenseDetailUiEvent.OnEditClicked)
+                        })
+                        Spacer(modifier = Modifier.height(8.dp))
+                        DeleteExpenseAction({
+                            onEvent(ExpenseDetailUiEvent.OnDeleteClicked)
+                        })
+                    }
+
+                }
+            }
         }
+
+
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding),
-            contentPadding = PaddingValues(bottom = 32.dp)
+                .padding(padding) .background(color = MaterialTheme.colorScheme.onPrimary),
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 16.dp)
         ) {
             item {
+                val amountWithCurrency = "${state.currency.symbol} ${state.expense?.displayAmount() ?: ""}"
                 ExpenseHeroCard(
-                    amount = state.expense?.displayAmount() ?: "",
+                    amount =  amountWithCurrency,
                     category = state.expense?.category?.displayName ?: "",
                     date = state.expense?.formattedDateTime() ?: "",
                 )
@@ -151,14 +123,8 @@ fun ExpenseDetailScreen(
                     note = state.expense?.note ?: ""
                 )
             }
-            // item { AttachmentSection() }
-            item { EditExpenseButton({
+           // item { AttachmentSection() }
 
-                onEvent(ExpenseDetailUiEvent.OnEditClicked)
-            }) }
-            item { DeleteExpenseAction({
-                onEvent(ExpenseDetailUiEvent.OnDeleteClicked)
-            }) }
         }
 
         if (state.isDeleteConfirmationVisible) {

@@ -22,8 +22,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.utils.APP_VERSION
 
+
+@Preview(showBackground = true)
 @Composable
 fun SplashScreen(
     modifier: Modifier = Modifier
@@ -101,7 +105,7 @@ fun SplashScreen(
             Spacer(modifier = Modifier.height(12.dp))
 
             Text(
-                text = "VERSION 2.0.4",
+                text = "VERSION $APP_VERSION",
                 style = MaterialTheme.typography.labelSmall,
                 color = Color.Gray
             )

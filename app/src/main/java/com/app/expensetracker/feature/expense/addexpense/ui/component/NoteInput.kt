@@ -17,6 +17,7 @@ import androidx.compose.material.icons.outlined.Note
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -44,6 +45,9 @@ fun NoteInput(
         OutlinedTextField(
             value = value,
             onValueChange = onValueChange,
+            modifier = Modifier
+                .fillMaxWidth(),
+            shape = RoundedCornerShape(20.dp),
             placeholder = {
                 Row {
                     Icon(
@@ -57,19 +61,30 @@ fun NoteInput(
                     Text("What was this for?")
                 }
             },
-            modifier = Modifier
-                .fillMaxWidth()
-                .heightIn(min = 100.dp).background(MaterialTheme.colorScheme.surface)
-                .border(width = 0.dp, color = Color.Transparent, shape = RoundedCornerShape(8.dp))
+            colors = OutlinedTextFieldDefaults.colors(
 
-            ,
+                // Remove border
+                focusedBorderColor = Color.Transparent,
+                unfocusedBorderColor = Color.Transparent,
+                disabledBorderColor = Color.Transparent,
+                errorBorderColor = Color.Transparent,
 
-            maxLines = 4
+                // Add background
+                focusedContainerColor = MaterialTheme.colorScheme.surface,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
+                errorContainerColor = MaterialTheme.colorScheme.surface
+            ),
+
+
+            maxLines = 5,
+            minLines = 5
+
         )
     }
 }
 
-@Preview(showBackground = true)
+@Preview(showBackground = true, backgroundColor = 0xFFF0EAE2)
 @Composable
 fun NoteInputPreview(){
     NoteInput(value = "", onValueChange = {})

@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.expensedetails.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.core.currency.CurrencyManager
 import com.app.expensetracker.feature.expense.domain.usecase.DeleteExpenseUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpenseByIdUseCase
 import com.app.expensetracker.feature.expense.expensedetails.state.ExpenseDetailUiEffect
@@ -23,6 +24,7 @@ import javax.inject.Inject
 class ExpenseDetailViewModel @Inject constructor(
     private val getExpenseById: GetExpenseByIdUseCase,
     private val deleteExpense: DeleteExpenseUseCase,
+    private val currencyManager: CurrencyManager,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -41,6 +43,7 @@ class ExpenseDetailViewModel @Inject constructor(
     val uiEffect = _uiEffect.asSharedFlow()
 
     init {
+        observeCurrency()
         loadExpense()
     }
 
@@ -90,6 +93,15 @@ class ExpenseDetailViewModel @Inject constructor(
                         isLoading = false,
                         errorMessage = "Failed to load expense"
                     )
+                }
+            }
+        }
+    }
+    private fun observeCurrency() {
+        viewModelScope.launch {
+            currencyManager.currency.collect { currencyItem ->
+                _uiState.update {
+                    it.copy(currency = currencyItem)
                 }
             }
         }

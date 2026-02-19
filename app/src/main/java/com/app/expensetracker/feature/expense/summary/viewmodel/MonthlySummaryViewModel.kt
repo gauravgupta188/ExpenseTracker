@@ -3,6 +3,7 @@ package com.app.expensetracker.feature.expense.summary.viewmodel
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.app.expensetracker.core.currency.CurrencyManager
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.domain.model.SummaryAggregate
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
@@ -35,7 +36,8 @@ class MonthlySummaryViewModel @Inject constructor(
     private val getExpenseByMonth: GetExpensesByMonthUseCase,
     private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
     private val saveMonthlyBudget: SaveMonthlyBudgetUseCase,
-    private val saveCategoryBudget: SaveCategoryBudgetUseCase
+    private val saveCategoryBudget: SaveCategoryBudgetUseCase,
+    private val currencyManager: CurrencyManager,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -50,9 +52,9 @@ class MonthlySummaryViewModel @Inject constructor(
     private val _selectedMonth =
         MutableStateFlow(YearMonthUiModel.current())
 
-  /*  init {
-        observeDashboardData()
-    }*/
+    init {
+        observeCurrency()
+    }
 
     fun onEvent(event: MonthlySummaryUiEvent) {
         when (event) {
@@ -155,6 +157,16 @@ class MonthlySummaryViewModel @Inject constructor(
                         "Failed to save budget"
                     )
                 )
+            }
+        }
+    }
+
+    private fun observeCurrency() {
+        viewModelScope.launch {
+            currencyManager.currency.collect { currencyItem ->
+                _uiState.update {
+                    it.copy(currency = currencyItem)
+                }
             }
         }
     }

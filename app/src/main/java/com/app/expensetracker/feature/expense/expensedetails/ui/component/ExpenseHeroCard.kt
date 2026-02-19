@@ -22,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCard
 
 @Composable
 fun ExpenseHeroCard(
@@ -29,15 +30,7 @@ fun ExpenseHeroCard(
     category: String,
     date : String
 ) {
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(16.dp),
-        shape = RoundedCornerShape(28.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color(0xFFF4F2FF)
-        )
-    ) {
+    AppCard{
         Column(
             modifier = Modifier.padding(24.dp).fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally
@@ -46,13 +39,13 @@ fun ExpenseHeroCard(
             Box(
                 modifier = Modifier
                     .size(56.dp)
-                    .background(Color.White, RoundedCornerShape(16.dp)),
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     imageVector = Icons.Outlined.ShoppingCart,
                     contentDescription = null,
-                    tint = Color(0xFF7C4DFF)
+                    tint = MaterialTheme.colorScheme.secondary
                 )
             }
 
@@ -61,7 +54,6 @@ fun ExpenseHeroCard(
             Text(
                 text = amount,
                 style = MaterialTheme.typography.displaySmall,
-                color = Color(0xFFFF9800),
                 fontWeight = FontWeight.Bold
             )
 

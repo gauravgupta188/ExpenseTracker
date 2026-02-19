@@ -22,10 +22,12 @@ import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiMod
 import com.app.expensetracker.feature.expense.ui.mapper.color
 import com.app.expensetracker.feature.expense.ui.mapper.displayName
 import com.app.expensetracker.feature.expense.ui.mapper.icon
+import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 
 @Composable
 fun CategoryItemRow(
     model: CategorySummaryUiModel,
+    currencyItem: CurrencyItem,
     onClick: () -> Unit
 ) {
     Column(
@@ -53,7 +55,7 @@ fun CategoryItemRow(
             )
 
             Text(
-                text = "₹${model.spentAmount.toInt()}",
+                text = "${currencyItem.symbol}${model.spentAmount.toInt()}",
                 style = MaterialTheme.typography.bodyLarge,
                 color = model.usageLevel.color()
             )
