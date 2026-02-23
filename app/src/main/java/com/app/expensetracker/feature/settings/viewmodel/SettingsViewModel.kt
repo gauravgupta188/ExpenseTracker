@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.core.currency.CurrencyManager
+import com.app.expensetracker.core.darktheme.ThemeManager
 import com.app.expensetracker.core.utils.DEFAULT_CURRENCY
 import com.app.expensetracker.feature.auth.domain.repository.AuthRepository
 import com.app.expensetracker.feature.settings.domain.model.CurrencyProvider
@@ -31,6 +32,7 @@ class SettingsViewModel @Inject constructor(
     private val repository: SettingsRepository,
     private val authRepository: AuthRepository,
     private val currencyManager: CurrencyManager,
+    private val themeManager: ThemeManager,
     private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
@@ -42,6 +44,7 @@ class SettingsViewModel @Inject constructor(
 
     init {
         observeDefaultCurrency()
+        observeDarkMode()
     }
 
     fun onEvent(event: SettingsUiEvent) {
@@ -90,6 +93,10 @@ class SettingsViewModel @Inject constructor(
             }
 
             is SettingsUiEvent.DarkModeToggled -> {
+                viewModelScope.launch {
+                    repository.setDarkMode(event.enabled)
+                }
+
                 _uiState.update {
                     it.copy(darkModeEnabled = event.enabled)
                 }
@@ -123,6 +130,16 @@ class SettingsViewModel @Inject constructor(
             currencyManager.currency.collect { currencyItem ->
                 _uiState.update {
                     it.copy(defaultCurrency = currencyItem)
+                }
+            }
+        }
+    }
+
+    private fun observeDarkMode() {
+        viewModelScope.launch {
+            themeManager.isDarkMode.collect { isDark ->
+                _uiState.update {
+                    it.copy(darkModeEnabled = isDark)
                 }
             }
         }

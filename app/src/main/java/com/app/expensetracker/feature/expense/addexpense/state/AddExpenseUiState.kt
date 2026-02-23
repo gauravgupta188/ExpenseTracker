@@ -9,7 +9,7 @@ import java.time.LocalDateTime
 
 data class AddExpenseUiState(
     val mode: ExpenseFormMode = ExpenseFormMode.Add,
-    val amount: String = "",
+    val amount: Double = 0.0,
     val selectedCategory: ExpenseCategory? = null,
     val selectedDate: LocalDateTime = LocalDateTime.now(),
    // val selectedTime: LocalDateTime = LocalDateTime.now(),

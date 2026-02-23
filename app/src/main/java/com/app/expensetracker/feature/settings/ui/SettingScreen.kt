@@ -163,7 +163,7 @@ fun SettingsScreen(
             item {
                 SettingsNavigationItem(
                     icon = Icons.Outlined.HelpOutline,
-                    title = "Support Center",
+                    title = "Help & Feedback",
                     onClick = { onEvent(SettingsUiEvent.SupportClicked) }
                 )
             }

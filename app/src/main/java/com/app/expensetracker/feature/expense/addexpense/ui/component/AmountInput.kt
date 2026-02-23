@@ -10,7 +10,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -21,12 +20,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
+import java.math.BigDecimal
 
 @Composable
 fun AmountInput(
-    value: String,
+    value: Double,
     currencyItem: CurrencyItem,
-    onValueChange: (String) -> Unit,
+    onValueChange: (Double) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -54,12 +54,15 @@ fun AmountInput(
             )
             Spacer(modifier = Modifier.width(12.dp))
             BasicTextField(
-                value = value,
+                value = if (value <= 0.0) {
+                    ""
+                } else {
+                    // Use BigDecimal to prevent scientific notation and strip trailing zeros
+                    BigDecimal.valueOf(value).stripTrailingZeros().toPlainString()
+                },
                 onValueChange = { input ->
-                    // Allow only digits and dot
-                    if (input.matches(Regex("^\\d*(\\.\\d{0,2})?$"))) {
-                        onValueChange(input)
-                    }
+                    // Safely parse the input to a Double, defaulting to 0.0 on invalid input
+                    onValueChange(input.toDoubleOrNull() ?: 0.0)
                 },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number

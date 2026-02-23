@@ -70,7 +70,7 @@ fun ExpenseItem(
                 Text(
                     text = formatDateTime(expense.date),
                     style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                    color = MaterialTheme.colorScheme.onSurfaceVariant.copy( 0.5f)
                 )
             }
 

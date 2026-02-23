@@ -7,7 +7,7 @@ import java.time.LocalTime
 
 sealed interface AddExpenseUiEvent {
 
-    data class AmountChanged(val value: String) : AddExpenseUiEvent
+    data class AmountChanged(val value: Double) : AddExpenseUiEvent
     data class CategorySelected(val category: ExpenseCategory) : AddExpenseUiEvent
     data class NoteChanged(val value: String) : AddExpenseUiEvent
 

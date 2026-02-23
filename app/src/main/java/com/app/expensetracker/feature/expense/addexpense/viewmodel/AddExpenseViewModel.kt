@@ -121,7 +121,7 @@ class AddExpenseViewModel @Inject constructor(
 
                 _uiState.update {
                     it.copy(
-                        amount = expense.amount.toString(),
+                        amount = expense.amount,
                         selectedCategory = expense.category,
                         selectedDate = expense.date,
                         note = expense.note ?: ""
@@ -136,7 +136,7 @@ class AddExpenseViewModel @Inject constructor(
     private fun saveExpense() {
         val state = _uiState.value
 
-        if (state.amount.isBlank()) {
+        if (state.amount <= 0) {
             emitError("Amount is required")
             return
         }
@@ -146,7 +146,7 @@ class AddExpenseViewModel @Inject constructor(
             return
         }
 
-        val amount = state.amount.toDoubleOrNull()
+        val amount = state.amount
         if (amount == null || amount <= 0) {
             emitError("Enter a valid amount")
             return

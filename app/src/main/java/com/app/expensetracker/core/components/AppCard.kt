@@ -30,7 +30,7 @@ fun AppCard(
             ),
         shape = MaterialTheme.shapes.medium, // 👈 from theme
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.surfaceContainer
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = defaultElevation

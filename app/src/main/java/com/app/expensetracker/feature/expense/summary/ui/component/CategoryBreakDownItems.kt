@@ -5,6 +5,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,6 +32,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.core.components.AppCard
 import com.app.expensetracker.core.components.AppCircularIcon
 import com.app.expensetracker.feature.expense.dashboard.ui.component.EditBudgetIcon
 import com.app.expensetracker.feature.expense.dashboard.ui.model.color
@@ -49,15 +51,11 @@ fun CategoryBreakdownItems(
 ) {
     val formattedCategoryBudget = model.budgetAmount ?: "No budget set"
 
-    Card(
+    AppCard (
         modifier = modifier
             .fillMaxWidth()
             .clickable { onCategoryClick(model.category.value) },
-        shape = RoundedCornerShape(20.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(4.dp)
+        contentPadding = PaddingValues(4.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
 

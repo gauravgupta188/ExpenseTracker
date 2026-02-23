@@ -11,5 +11,10 @@ fun getDefaultCurrency() : String = "₹"
 fun formattedCurrencyWithAmount(amount: Double,currency: CurrencyItem): String =
     "${currency.symbol}${amount.formatAmount()}"
 
+fun isValidAmount(input: String): Boolean {
+    val regex = Regex("^\\d{0,8}(\\.\\d{0,2})?$")
+    return input.matches(regex)
+}
+
 
 

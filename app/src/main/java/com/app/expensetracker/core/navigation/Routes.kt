@@ -66,4 +66,5 @@ sealed class Routes(val route: String) {
     //Settings
     data object Settings : Routes("settings")
     data object Profile : Routes("profile")
+    data object Support : Routes("support")
 }

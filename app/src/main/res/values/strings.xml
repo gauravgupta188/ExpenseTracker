@@ -2,4 +2,13 @@
     <string name="app_name">ExpenseTracker</string>
     <string name="logo_content_description">Logo Description</string>
     <string name="default_web_client_id">1056789961354-tsrg2g5a6jggg9qmfb9p8fajb8nq0odi.apps.googleusercontent.com</string>
+    <string name="support_screen_title">Help &amp; Feedback</string>
+    <string name="support_send_feedback_title">Send Feedback</string>
+    <string name="support_send_feedback_subtitle">Share your suggestions or ideas</string>
+    <string name="support_feedback_email_subject">Feedback - Expense Tracker</string>
+    <string name="support_report_bug_title">Report a Bug</string>
+    <string name="support_report_bug_subtitle">Tell us what went wrong</string>
+    <string name="support_bug_report_email_subject">Bug Report - Expense Tracker</string>
+    <string name="support_rate_app_title">Rate the App</string>
+    <string name="support_rate_app_subtitle">Support us on Play Store</string>
 </resources>

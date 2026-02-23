@@ -35,26 +35,32 @@ val LightOnError = PureWhite
 val LightSuccess = Color(0xFF2E7D32)
 
 /* -------------------- Dark Theme -------------------- */
+// ───── Surfaces ─────
+val DarkBackground = Color(0xFF0F0F12)
+val DarkSurface = Color(0xFF16161A)
+val DarkCard = Color(0xFF1C1C21)
+val DarkElevated = Color(0xFF222228)
+val DarkDivider = Color(0xFF2A2A31)
 
-val DarkBackground = Color(0xFF121212)
-val DarkSurface = Color(0xFF1E1E1E)
-val DarkCard = Color(0xFF242424)
-val DarkDivider = Color(0xFF2E2E2E)
+// ───── Primary (Orange) ─────
+val DarkPrimary = BrandOrange
+val DarkOnPrimary = Color(0xFF1F1200)
+val DarkPrimaryContainer = Color(0xFF3A2400)
+val DarkOnPrimaryContainer = Color(0xFFFFCC80)
 
-val DarkPrimary = Color(0xFFFFB74D)
-val DarkOnPrimary = Color(0xFF2B1A00)
-val DarkPrimaryContainer = Color(0xFF5A3600)
-val DarkOnPrimaryContainer = Color(0xFFFFDDB5)
+// ───── Secondary (Purple) ─────
+val DarkSecondary = BrandViolet
+val DarkOnSecondary = Color(0xFF1E0033)
+val DarkSecondaryContainer = Color(0xFF2A0044)
+val DarkOnSecondaryContainer = Color(0xFFE0C3FF)
 
-val DarkSecondary = Color(0xFFC79AF5)
-val DarkOnSecondary = Color(0xFF2A003E)
-val DarkSecondaryContainer = Color(0xFF3A005C)
-val DarkOnSecondaryContainer = Color(0xFFEAD7FF)
+// ───── Text ─────
+val DarkTextPrimary = Color(0xFFF5F5F5)
+val DarkTextSecondary = Color(0xFFB0B3B8)
+val DarkTextTertiary = Color(0xFF8A8F98)
+val DarkTextDisabled = Color(0xFF5C5F66)
 
-val DarkTextPrimary = Color(0xFFFFFFFF)
-val DarkTextSecondary = Color(0xFFBDBDBD)
-val DarkTextDisabled = Color(0xFF757575)
-
-val DarkError = Color(0xFFEF9A9A)
+// ───── Status ─────
+val DarkError = Color(0xFFFF6B6B)
 val DarkOnError = Color(0xFF3B0000)
-val DarkSuccess = Color(0xFF81C784)
+val DarkSuccess = Color(0xFF4CAF50)

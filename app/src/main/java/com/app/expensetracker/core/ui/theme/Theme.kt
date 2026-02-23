@@ -35,6 +35,7 @@ private val LightColorScheme = lightColorScheme(
     background = LightBackground,
     surface = LightSurface,
     onSurface = LightTextPrimary,
+    surfaceContainer = LightCard,
 
     error = LightError,
     onError = LightOnError
@@ -54,6 +55,7 @@ private val DarkColorScheme = darkColorScheme(
     background = DarkBackground,
     surface = DarkSurface,
     onSurface = DarkTextPrimary,
+    surfaceContainer = DarkCard,
 
     error = DarkError,
     onError = DarkOnError
@@ -80,17 +82,15 @@ fun ExpenseTrackerTheme(
     if (!view.isInEditMode) {
         SideEffect {
             val window = (view.context as Activity).window
+            val controller = WindowCompat.getInsetsController(window, view)
 
+            controller.apply {
+                isAppearanceLightStatusBars = !darkTheme
+                isAppearanceLightNavigationBars = !darkTheme
+            }
 
-            // ✅ Make system bars transparent (NOT deprecated)
-            window.statusBarColor = android.graphics.Color.TRANSPARENT
-
-            // White status bar icons
-            WindowCompat.getInsetsController(window, view)
-                .isAppearanceLightStatusBars = darkTheme
-
-
-
+            window.statusBarColor = Color.Transparent.toArgb()
+            window.navigationBarColor = Color.Transparent.toArgb()
         }
     }
 

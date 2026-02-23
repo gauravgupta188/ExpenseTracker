@@ -10,10 +10,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
+import com.app.expensetracker.core.darktheme.ThemeManager
 import com.app.expensetracker.core.navigation.AppNavGraph
 import com.app.expensetracker.core.ui.theme.ExpenseTrackerTheme
 import com.app.expensetracker.core.viewmodel.AppStartViewModel
@@ -21,10 +23,13 @@ import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     private var isAppReady = false
+    @Inject
+    lateinit var themeManager: ThemeManager
     override fun onCreate(savedInstanceState: Bundle?) {
 
         installSplashScreen()
@@ -43,23 +48,23 @@ class MainActivity : ComponentActivity() {
           InitApp()
         }
     }
-}
-
-@Composable
-fun InitApp() {
-    // Later this can come from DataStore / Settings
-    val isDarkTheme = isSystemInDarkTheme()
-    val appStartViewModel: AppStartViewModel = hiltViewModel()
-    val isFirebaseLoggedIn = appStartViewModel.isLoggedIn
-        .collectAsState().value
-
-    val appDateViewModel: AppDateViewModel = hiltViewModel()
 
 
-    ExpenseTrackerTheme(
-        darkTheme = isDarkTheme
-    ) {
-        val navController = rememberNavController()
+    @Composable
+    fun InitApp() {
+        // Later this can come from DataStore / Settings
+        val isDarkTheme by themeManager.isDarkMode.collectAsState()
+        val appStartViewModel: AppStartViewModel = hiltViewModel()
+        val isFirebaseLoggedIn = appStartViewModel.isLoggedIn
+            .collectAsState().value
+
+        val appDateViewModel: AppDateViewModel = hiltViewModel()
+
+
+        ExpenseTrackerTheme(
+            darkTheme = isDarkTheme
+        ) {
+            val navController = rememberNavController()
 
             AppNavGraph(
                 navController = navController,
@@ -67,5 +72,7 @@ fun InitApp() {
                 appDateViewModel = appDateViewModel
             )
 
+        }
     }
 }
+

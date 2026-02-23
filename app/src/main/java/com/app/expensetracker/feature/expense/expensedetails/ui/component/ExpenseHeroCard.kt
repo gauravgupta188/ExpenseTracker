@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.app.expensetracker.core.components.AppCard
+import com.app.expensetracker.core.components.AppCircularIcon
 
 @Composable
 fun ExpenseHeroCard(
@@ -36,18 +37,9 @@ fun ExpenseHeroCard(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
 
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(20.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.ShoppingCart,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.secondary
-                )
-            }
+
+            AppCircularIcon(Icons.Outlined.ShoppingCart, iconSize = 56.dp)
+
 
             Spacer(modifier = Modifier.height(16.dp))
 

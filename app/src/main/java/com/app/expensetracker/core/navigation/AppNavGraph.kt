@@ -40,6 +40,7 @@ import com.app.expensetracker.feature.expense.monthlyexpense.viewmodel.MonthlyEx
 import com.app.expensetracker.feature.expense.summary.ui.MonthlySummaryScreen
 import com.app.expensetracker.feature.expense.summary.viewmodel.MonthlySummaryViewModel
 import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
+import com.app.expensetracker.feature.settings.features.support.ui.SupportScreen
 import com.app.expensetracker.feature.settings.state.SettingsUiEffect
 import com.app.expensetracker.feature.settings.ui.SettingsScreen
 import com.app.expensetracker.feature.settings.viewmodel.SettingsViewModel
@@ -464,10 +465,18 @@ fun AppNavGraph(
                         SettingsUiEffect.NavigateToPasscode -> {}
                         SettingsUiEffect.NavigateToProfile -> {}
                         SettingsUiEffect.NavigateToSubscription -> {}
-                        SettingsUiEffect.NavigateToSupport -> {}
+                        SettingsUiEffect.NavigateToSupport -> {
+                            navController.navigate(Routes.Support.route)
+                        }
                     }
                 }
             }
+        }
+
+        composable(Routes.Support.route) {
+
+            SupportScreen(onBack = { navController.popBackStack() })
+
         }
     }
 }

@@ -20,4 +20,6 @@ data class SettingsUiState(
 
     // App
     val appVersion: String = "Expense Tracker v1.0.1"
+
+    
 )

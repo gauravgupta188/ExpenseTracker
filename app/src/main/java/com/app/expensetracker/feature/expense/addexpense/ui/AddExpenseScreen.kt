@@ -83,7 +83,7 @@ fun AddExpenseScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .background(MaterialTheme.colorScheme.background)
                         .navigationBarsPadding() // 🔥 important
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
@@ -91,7 +91,8 @@ fun AddExpenseScreen(
                         text = if (uiState.mode is ExpenseFormMode.Edit)
                             "Update Expense"
                         else "Save Expense",
-                        onClick = { onEvent(AddExpenseUiEvent.SaveClicked) },
+                        onClick = {
+                            onEvent(AddExpenseUiEvent.SaveClicked) },
                         enabled = !uiState.isLoading,
                         modifier = Modifier.fillMaxWidth()
                     )
@@ -104,7 +105,7 @@ fun AddExpenseScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(padding)
-                .background(color = MaterialTheme.colorScheme.onPrimary),
+                .background(color = MaterialTheme.colorScheme.background),
             contentPadding = PaddingValues(16.dp),
             verticalArrangement = Arrangement.spacedBy(24.dp, alignment = Alignment.Top),
 

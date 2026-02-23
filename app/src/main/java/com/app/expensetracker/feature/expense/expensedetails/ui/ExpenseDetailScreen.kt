@@ -80,7 +80,7 @@ fun ExpenseDetailScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(MaterialTheme.colorScheme.onPrimary)
+                        .background(MaterialTheme.colorScheme.background)
                         .navigationBarsPadding() // 🔥 important
                         .padding(horizontal = 16.dp, vertical = 12.dp)
                 ) {
@@ -104,7 +104,7 @@ fun ExpenseDetailScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(padding) .background(color = MaterialTheme.colorScheme.onPrimary),
+                .padding(padding) .background(color = MaterialTheme.colorScheme.background),
             verticalArrangement = Arrangement.spacedBy(16.dp),
             contentPadding = PaddingValues(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 16.dp)
         ) {

@@ -17,7 +17,7 @@ data class ExpenseUiState(
 
     val months: List<YearMonthUiModel> = emptyList(),
     val selectedMonth: YearMonthUiModel,
-    val        isCurrentMonth: Boolean = true,
+    val isCurrentMonth: Boolean = true,
 
     val expenses: List<Expense> = emptyList(),
     val recentExpenses: List<Expense> = emptyList(),
@@ -33,5 +33,5 @@ data class ExpenseUiState(
     val showMonthPicker: Boolean = false,
     val currency: CurrencyItem =
         CurrencyProvider.getCurrencyByCode("USD"),
-    )
-  //Effects
+)
+//Effects

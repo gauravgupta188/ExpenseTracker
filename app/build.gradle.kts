@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.ksp)
     //Firebase
     id("com.google.gms.google-services")
+    id("com.google.firebase.crashlytics")
 
 }
 
@@ -98,6 +99,8 @@ dependencies {
     implementation(libs.googleid)
     implementation(libs.kotlinx.coroutines.play.services)
     implementation(libs.firebase.firestore)
+    implementation(libs.firebase.crashlytics)
+    implementation(libs.google.firebase.analytics)
 
     /*--------------------- DATASTORE ---------------------*/
     // Preferences DataStore (SharedPreferences like APIs)
