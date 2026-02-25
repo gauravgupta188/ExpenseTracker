@@ -40,6 +40,9 @@ import com.app.expensetracker.feature.expense.monthlyexpense.viewmodel.MonthlyEx
 import com.app.expensetracker.feature.expense.summary.ui.MonthlySummaryScreen
 import com.app.expensetracker.feature.expense.summary.viewmodel.MonthlySummaryViewModel
 import com.app.expensetracker.feature.expense.viewmodel.AppDateViewModel
+import com.app.expensetracker.feature.settings.features.profile.state.ProfileUiEffect
+import com.app.expensetracker.feature.settings.features.profile.ui.ProfileScreen
+import com.app.expensetracker.feature.settings.features.profile.viewmodel.ProfileViewModel
 import com.app.expensetracker.feature.settings.features.support.ui.SupportScreen
 import com.app.expensetracker.feature.settings.state.SettingsUiEffect
 import com.app.expensetracker.feature.settings.ui.SettingsScreen
@@ -183,6 +186,7 @@ fun AppNavGraph(
 
                 DashboardScreen(
                     state = viewModel.uiState.collectAsState().value,
+
                     onEvent = viewModel::onEvent,
                     onAddExpenseClick = {
                         navController.navigate(Routes.AddExpense.route)
@@ -431,11 +435,29 @@ fun AppNavGraph(
 
         }
 
+        // -------- AUTH --------
+        navigation(
+            startDestination = Routes.Settings.route,
+            route = Routes.SettingRoot.route,
+        ) {
+
         composable(Routes.Profile.route) {
-            /*  ProfileScreen(
-                  viewModel = hiltViewModel(),
-                  onBack = { navController.popBackStack() }
-              )*/
+            val viewModel: ProfileViewModel = hiltViewModel()
+
+            ProfileScreen(
+                onEvent = viewModel::onEvent,
+                uiState = viewModel.uiState.collectAsState().value,
+              )
+
+            LaunchedEffect(Unit) {
+                viewModel.uiEffect.collect { effect ->
+                    when (effect) {
+                        ProfileUiEffect.LogoutSuccess -> TODO()
+                        ProfileUiEffect.NavigateBack ->  navController.popBackStack()
+                        is ProfileUiEffect.ShowError -> TODO()
+                    }
+                }
+            }
         }
 
         composable(Routes.Settings.route) {
@@ -463,7 +485,7 @@ fun AppNavGraph(
 
                         SettingsUiEffect.NavigateToCurrency -> {}
                         SettingsUiEffect.NavigateToPasscode -> {}
-                        SettingsUiEffect.NavigateToProfile -> {}
+                        SettingsUiEffect.NavigateToProfile -> { navController.navigate(Routes.Profile.route)}
                         SettingsUiEffect.NavigateToSubscription -> {}
                         SettingsUiEffect.NavigateToSupport -> {
                             navController.navigate(Routes.Support.route)
@@ -478,5 +500,6 @@ fun AppNavGraph(
             SupportScreen(onBack = { navController.popBackStack() })
 
         }
+    }
     }
 }

@@ -4,7 +4,9 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.core.currency.CurrencyManager
+import com.app.expensetracker.core.utils.extractFirstName
 import com.app.expensetracker.core.utils.generateMonths
+import com.app.expensetracker.feature.auth.domain.repository.AuthRepository
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect
 import com.app.expensetracker.feature.expense.dashboard.state.ExpenseUiEffect.*
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
@@ -43,6 +45,7 @@ class DashboardViewModel @Inject constructor(
     private val getExpensesByMonth: GetExpensesByMonthUseCase,
     private val observeMonthlyBudget: ObserveMonthlyBudgetUseCase,
     private val getRecentExpenses: GetRecentExpenseByMonthUseCase,
+    private val authRepository: AuthRepository,
     private val currencyManager: CurrencyManager
 ) : ViewModel() {
 
@@ -71,6 +74,7 @@ class DashboardViewModel @Inject constructor(
     init {
         observeRecentExpenses()
         observeCurrency()
+        loadUser()
         //observeDashboardData()
        // updateSelectedMonth()
 
@@ -270,6 +274,22 @@ class DashboardViewModel @Inject constructor(
                 }
             }
             .launchIn(viewModelScope)
+    }
+
+    private fun loadUser() {
+        val user = authRepository.getCurrentUser()
+
+
+
+        val name = extractFirstName(user?.displayName)
+            ?: user?.email?.substringBefore("@")
+            ?: ""
+
+
+
+        _uiState.update {
+            it.copy(currentUser = user, displayName = name)
+        }
     }
 
     private fun observeCurrency() {

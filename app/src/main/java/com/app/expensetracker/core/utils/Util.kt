@@ -17,4 +17,14 @@ fun isValidAmount(input: String): Boolean {
 }
 
 
+fun extractFirstName(fullName: String?): String {
+    if (fullName.isNullOrBlank()) return ""
+
+    return fullName
+        .trim()
+        .split("\\s+".toRegex())
+        .firstOrNull()
+        ?: ""
+}
+
 

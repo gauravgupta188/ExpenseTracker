@@ -56,7 +56,7 @@ class RegisterViewModel @Inject constructor(
         _uiState.update { it.copy(isLoading = true, error = null) }
 
         runCatching {
-            registerUser(email = _uiState.value.email, password = _uiState.value.password)
+            registerUser(email = _uiState.value.email, password = _uiState.value.password, displayName = _uiState.value.fullName)
         }.onSuccess {
             _navigationEffect.emit(Unit)
             _uiState.update { it.copy(isLoading = false) }

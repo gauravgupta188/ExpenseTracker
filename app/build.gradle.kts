@@ -101,6 +101,8 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.crashlytics)
     implementation(libs.google.firebase.analytics)
+    implementation(libs.firebase.storage)
+
 
     /*--------------------- DATASTORE ---------------------*/
     // Preferences DataStore (SharedPreferences like APIs)
@@ -109,6 +111,8 @@ dependencies {
     // Alternatively - without an Android dependency.
     implementation(libs.androidx.datastore.preferences.core)
 
+    /*--------------------- Async Image ---------------------*/
+    implementation("io.coil-kt:coil-compose:2.5.0")
 
 
     testImplementation(libs.junit)

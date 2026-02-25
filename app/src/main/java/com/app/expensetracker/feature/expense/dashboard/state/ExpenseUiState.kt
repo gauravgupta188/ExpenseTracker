@@ -1,11 +1,13 @@
 package com.app.expensetracker.feature.expense.dashboard.state
 
+import com.app.expensetracker.feature.auth.domain.model.AuthUser
 import com.app.expensetracker.feature.expense.domain.model.Expense
 import com.app.expensetracker.feature.expense.domain.model.MonthHighlightsUi
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.summary.model.CategorySummaryUiModel
 import com.app.expensetracker.feature.settings.domain.model.CurrencyItem
 import com.app.expensetracker.feature.settings.domain.model.CurrencyProvider
+import com.google.rpc.context.AttributeContext
 import java.time.Month
 
 /**
@@ -18,6 +20,8 @@ data class ExpenseUiState(
     val months: List<YearMonthUiModel> = emptyList(),
     val selectedMonth: YearMonthUiModel,
     val isCurrentMonth: Boolean = true,
+    val currentUser : AuthUser? = null,
+    val displayName : String = "",
 
     val expenses: List<Expense> = emptyList(),
     val recentExpenses: List<Expense> = emptyList(),

@@ -8,6 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.outlined.BugReport
+import androidx.compose.material.icons.outlined.Feedback
+import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.RateReview
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -22,6 +26,8 @@ import com.app.expensetracker.feature.settings.features.support.helper.openEmail
 import com.app.expensetracker.feature.settings.features.support.helper.openPlayStore
 import com.app.expensetracker.feature.settings.features.support.ui.components.AppVersionInfo
 import com.app.expensetracker.feature.settings.features.support.ui.components.SupportItem
+import com.app.expensetracker.feature.settings.state.SettingsUiEvent
+import com.app.expensetracker.feature.settings.ui.component.SettingsNavigationItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -52,29 +58,28 @@ fun SupportScreen(
                 .fillMaxSize()
         ) {
 
-            SupportItem(
+            SettingsNavigationItem(
+                icon = Icons.Outlined.Feedback,
                 title = "Send Feedback",
                 subtitle = "Share your suggestions or ideas",
-                onClick = {
-                    openEmail(
-                        context = context,
-                        subject = "Feedback - Expense Tracker"
-                    )
-                }
+                onClick = {  openEmail(
+                    context = context,
+                    subject = "Feedback - Expense Tracker"
+                ) }
             )
 
-            SupportItem(
+            SettingsNavigationItem(
+                icon = Icons.Outlined.BugReport,
                 title = "Report a Bug",
                 subtitle = "Tell us what went wrong",
-                onClick = {
-                    openEmail(
-                        context = context,
-                        subject = "Bug Report - Expense Tracker"
-                    )
-                }
+                onClick = {    openEmail(
+                    context = context,
+                    subject = "Bug Report - Expense Tracker"
+                ) }
             )
 
-            SupportItem(
+            SettingsNavigationItem(
+                icon = Icons.Outlined.RateReview,
                 title = "Rate the App",
                 subtitle = "Support us on Play Store",
                 onClick = {

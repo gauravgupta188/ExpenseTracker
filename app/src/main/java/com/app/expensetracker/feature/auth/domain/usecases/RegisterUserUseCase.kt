@@ -7,6 +7,7 @@ class RegisterUserUseCase(
 ) {
     suspend operator fun invoke(
         email: String,
-        password: String
-    ) = repository.register(email, password)
+        password: String,
+        displayName: String
+    ) = repository.register(email, password,displayName)
 }

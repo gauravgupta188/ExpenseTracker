@@ -62,7 +62,7 @@ fun DashboardScreen(
         topBar = {
             DashboardTopAppBar(
                 scrollBehavior = scrollBehavior,
-                title = "Hello kumar",
+                title = "Hello ${state.displayName}",
                 subtitle = appDateUiState.selectedMonth.label,
                 monthSelectorClick = {
                     onDateEvent(AppDateEvent.OpenPicker)

@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AccountBalanceWallet
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
@@ -49,6 +50,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
@@ -56,6 +58,8 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.credentials.CredentialManager
 import com.app.expensetracker.R
+import com.app.expensetracker.core.components.AppButton
+import com.app.expensetracker.core.components.AppCircularIcon
 import com.app.expensetracker.core.components.AppLoader
 import com.app.expensetracker.core.components.AppOutlinedTextField
 import com.app.expensetracker.feature.auth.login.launchGoogleSignIn
@@ -66,6 +70,7 @@ import com.app.expensetracker.ui.theme.BrandBlack
 import com.app.expensetracker.ui.theme.BrandOrange
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
+import kotlin.math.sin
 
 
 @Composable
@@ -166,8 +171,8 @@ private fun BoxScope.LoginContent(
             .align(Alignment.BottomCenter)
             .navigationBarsPadding()
             .background(
-                color = Color.White,
-                shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                color = MaterialTheme.colorScheme.background,
+                // shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
             )
             .padding(24.dp)
     ) {
@@ -225,23 +230,12 @@ private fun BoxScope.LoginContent(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
+        AppButton(
             onClick = { onEvent(LoginUiEvent.OnLoginClicked) },
             enabled = !uiState.isLoading,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(16.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = BrandOrange
-            )
-        ) {
-            Text(
-                text = "Sign In",
-                style = MaterialTheme.typography.titleMedium,
-                color = Color.White
-            )
-        }
+            text = stringResource(R.string.sign_in)
+
+        )
 
         Spacer(modifier = Modifier.height(24.dp))
         /* -------------------- Social Media  -------------------- */
@@ -267,6 +261,9 @@ private fun Header() {
         verticalArrangement = Arrangement.Center
     ) {
 
+
+        AppCircularIcon(Icons.Default.AccountBalanceWallet , 72.dp)
+/*
         Box(
             modifier = Modifier
                 .size(72.dp)
@@ -274,19 +271,19 @@ private fun Header() {
                 .background(Color(0xFF2A2A2A)),
             contentAlignment = Alignment.Center
         ) {
-            /* Replace with Image if logo drawable exists */
+            *//* Replace with Image if logo drawable exists *//*
             Icon(
                 imageVector = Icons.Default.Visibility,
                 contentDescription = null,
                 tint = BrandOrange,
                 modifier = Modifier.size(32.dp)
             )
-        }
+        }*/
 
         Spacer(modifier = Modifier.height(16.dp))
 
         Text(
-            text = "Login",
+            text = stringResource(R.string.login),
             style = MaterialTheme.typography.headlineLarge,
             color = Color.White
         )
@@ -294,7 +291,7 @@ private fun Header() {
         Spacer(modifier = Modifier.height(8.dp))
 
         Text(
-            text = "Welcome back to Expense Tracker",
+            text = stringResource(R.string.welcome_back_to_expense_tracker),
             style = MaterialTheme.typography.bodyMedium,
             color = Color.White.copy(alpha = 0.7f)
         )
@@ -319,7 +316,7 @@ fun SocialMediaSection( onEvent: (LoginUiEvent) -> Unit,) {
             )
             Spacer(Modifier.width(2.dp))
             Text(
-                text = "Or continue with",
+                text = stringResource(R.string.or_continue_with),
 
                 color = Color.Gray
             )
@@ -349,10 +346,10 @@ fun SocialMediaSection( onEvent: (LoginUiEvent) -> Unit,) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_google_logo),
                         contentDescription = null,
-                        tint = Color.Unspecified
+
                     )
                     Spacer(modifier = Modifier.padding(horizontal = 4.dp))
-                    Text("Google", color = BrandBlack)
+                    Text("Google")
                 }
             }
 

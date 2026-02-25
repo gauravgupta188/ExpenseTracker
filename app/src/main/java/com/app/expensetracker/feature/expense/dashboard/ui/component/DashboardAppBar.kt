@@ -32,7 +32,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -67,9 +69,9 @@ fun DashboardTopAppBar(
                 Spacer(Modifier.width(8.dp))
              //   Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
                     Column {
-                        Text(title, style = MaterialTheme.typography.headlineSmall, maxLines = 1)
+                        Text(title, style = MaterialTheme.typography.bodyLarge, maxLines = 1)
                         Text(
-                            "Monthly Overview",
+                            stringResource(R.string.monthly_overview),
                             style = MaterialTheme.typography.bodySmall,
                             maxLines = 1
                         )

@@ -42,6 +42,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -49,6 +50,8 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
+import com.app.expensetracker.R
+import com.app.expensetracker.core.components.AppButton
 import com.app.expensetracker.core.components.AppOutlinedTextField
 import com.app.expensetracker.feature.auth.login.state.LoginUiEvent
 import com.app.expensetracker.feature.auth.login.state.LoginUiState
@@ -77,11 +80,6 @@ fun RegisterScreen(
                 .fillMaxWidth()
                 .height(280.dp)
                 .statusBarsPadding()
-                .background(
-                    Brush.verticalGradient(
-                        listOf(BrandBlack, Color(0xFF1A1A1A))
-                    )
-                )
                 .padding(16.dp)
         ) {
 
@@ -93,7 +91,7 @@ fun RegisterScreen(
             ) {
                 Icon(
                     imageVector = Icons.AutoMirrored.Filled.ArrowBack,
-                    contentDescription = "Back",
+                    contentDescription =stringResource(R.string.back),
                     tint = Color.White
                 )
             }
@@ -101,7 +99,7 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(32.dp))
 
             Text(
-                text = "Create Account",
+                text = stringResource(R.string.create_account),
                 style = MaterialTheme.typography.headlineLarge,
                 color = Color.White
             )
@@ -109,11 +107,12 @@ fun RegisterScreen(
             Spacer(modifier = Modifier.height(8.dp))
 
             Text(
-                text = "Start tracking your expenses with precision.",
+                text = stringResource(R.string.start_tracking_your_expenses_with_precision),
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.White.copy(alpha = 0.7f)
             )
         }
+
         /* -------------------- Form -------------------- */
         Column(
             modifier = Modifier
@@ -123,8 +122,8 @@ fun RegisterScreen(
                 .imePadding()
                 .verticalScroll(rememberScrollState())
                 .background(
-                    color = Color.White,
-                    shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
+                    color = MaterialTheme.colorScheme.background,
+                    //  shape = RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp)
                 )
                 .padding(24.dp)
         ) {
@@ -190,24 +189,25 @@ fun RegisterScreen(
 
                 Text(
                     modifier = Modifier.weight(1f),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                     text = buildAnnotatedString {
-                        append("I agree to the ")
+                        append(stringResource(R.string.i_agree_to_the))
                         withStyle(
                             style = MaterialTheme.typography.bodyMedium.toSpanStyle().copy(
-                                color = BrandViolet,
+                                color = MaterialTheme.colorScheme.secondary,
                                 fontWeight = FontWeight.Medium
                             )
                         ) {
-                            append("Terms of Service")
+                            append(stringResource(R.string.terms_of_service))
                         }
-                        append(" and ")
+                        append(stringResource(R.string.and))
                         withStyle(
                             style = MaterialTheme.typography.bodyMedium.toSpanStyle().copy(
-                                color = BrandViolet,
+                                color = MaterialTheme.colorScheme.secondary,
                                 fontWeight = FontWeight.Medium
                             )
                         ) {
-                            append("Privacy Policy")
+                            append(stringResource(R.string.privacy_policy))
                         }
                     },
                 )
@@ -215,23 +215,11 @@ fun RegisterScreen(
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            Button(
+            AppButton(
                 onClick = { onEvent(RegisterUiEvent.OnSignUpClicked) },
                 enabled = uiState.isTermsAccepted && !uiState.isLoading,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = BrandOrange
-                )
-            ) {
-                Text(
-                    text = "Register",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = Color.White
-                )
-            }
+                text = stringResource(R.string.register),
+            )
 
             Spacer(modifier = Modifier.height(24.dp))
 
@@ -241,11 +229,11 @@ fun RegisterScreen(
                 verticalAlignment = Alignment.CenterVertically
 
             ) {
-                Text("Already have an account? ")
+                Text(stringResource(R.string.already_have_an_account), color = MaterialTheme.colorScheme.onSurfaceVariant)
                 TextButton(onClick = onBackClick) {
                     Text(
-                        text = "Log in",
-                        color = BrandViolet,
+                        text = stringResource(R.string.log_in),
+                        color = MaterialTheme.colorScheme.secondary,
                         fontWeight = FontWeight.SemiBold
                     )
                 }

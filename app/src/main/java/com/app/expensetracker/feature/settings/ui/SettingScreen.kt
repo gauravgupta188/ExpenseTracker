@@ -105,7 +105,7 @@ fun SettingsScreen(
                 )
             }
 
-            item {
+        /*    item {
                 SettingsNavigationItem(
                     icon = Icons.Outlined.CreditCard,
                     title = "Subscription Plan",
@@ -113,7 +113,7 @@ fun SettingsScreen(
                     trailingText = "UPGRADE",
                     onClick = { onEvent(SettingsUiEvent.SubscriptionClicked) }
                 )
-            }
+            }*/
 
             /* ───── Preferences ───── */
             item { SettingsSectionHeader("PREFERENCES") }
@@ -146,7 +146,7 @@ fun SettingsScreen(
             }
 
             /* ───── Security ───── */
-            item { SettingsSectionHeader("SECURITY") }
+        /*    item { SettingsSectionHeader("SECURITY") }
 
             item {
                 SettingsNavigationItem(
@@ -155,7 +155,7 @@ fun SettingsScreen(
                     subtitle = "Protect app access",
                     onClick = { onEvent(SettingsUiEvent.PasscodeClicked) }
                 )
-            }
+            }*/
 
             /* ───── Support ───── */
             item { SettingsSectionHeader("SUPPORT") }
