@@ -6,6 +6,7 @@ import com.app.expensetracker.feature.auth.domain.usecases.RegisterUserUseCase
 import com.app.expensetracker.feature.auth.data.AuthRepositoryImpl
 import com.app.expensetracker.feature.auth.domain.usecases.CheckUserLoggedInUseCase
 import com.app.expensetracker.feature.auth.domain.usecases.LoginWithGoogleUseCase
+import com.app.expensetracker.feature.auth.domain.usecases.ResetPasswordUseCase
 import com.google.firebase.auth.FirebaseAuth
 import dagger.Module
 import dagger.Provides
@@ -44,5 +45,10 @@ object AuthModule {
     fun provideCheckUserLoggedInUseCase(
         repository: AuthRepository
     ) = CheckUserLoggedInUseCase(repository)
+
+    @Provides
+    fun provideResetPasswordUseCase(
+        repository: AuthRepository
+    ) = ResetPasswordUseCase(repository)
 
 }

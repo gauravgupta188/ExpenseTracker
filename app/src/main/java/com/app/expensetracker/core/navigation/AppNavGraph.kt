@@ -157,12 +157,13 @@ fun AppNavGraph(
 
                 ResetPasswordScreen(
                     uiState = viewModel.uiState.collectAsState().value,
+                    uiEffect = viewModel.uiEffect,
                     onEvent = viewModel::onEvent,
                     onBackClick = {
                         navController.popBackStack()
                     },
 
-                    ) { }
+                    )
             }
         }
         // -------- MAIN --------

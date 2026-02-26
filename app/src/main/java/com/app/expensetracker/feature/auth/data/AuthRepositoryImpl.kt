@@ -74,6 +74,12 @@ class AuthRepositoryImpl(
         firebaseAuth.signOut()
     }
 
+    override suspend fun resetPassword(email: String) {
+        firebaseAuth
+            .sendPasswordResetEmail(email)
+            .await()
+    }
+
     override suspend fun loginWithGoogle(idToken: String) {
         val credential = GoogleAuthProvider.getCredential(idToken, null)
         firebaseAuth.signInWithCredential(credential).await()

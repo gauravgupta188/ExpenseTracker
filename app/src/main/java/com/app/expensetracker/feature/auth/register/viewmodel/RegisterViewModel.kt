@@ -64,8 +64,6 @@ class RegisterViewModel @Inject constructor(
             _uiState.update { it.copy(error = it.error, isLoading = false) }
         }
 
-        // TODO: Firebase email/password login
-
         _uiState.update { it.copy(isLoading = false) }
 
     }
