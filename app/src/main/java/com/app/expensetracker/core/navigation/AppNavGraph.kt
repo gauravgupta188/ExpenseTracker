@@ -497,9 +497,7 @@ fun AppNavGraph(
         }
 
         composable(Routes.Support.route) {
-
             SupportScreen(onBack = { navController.popBackStack() })
-
         }
     }
     }
