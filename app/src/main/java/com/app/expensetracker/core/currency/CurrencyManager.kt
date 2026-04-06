@@ -13,6 +13,7 @@ class CurrencyManager @Inject constructor(
     private val settingsRepository: SettingsRepository
 ) {
 
+    //Select Curreny.
     val currency: Flow<CurrencyItem> =
         settingsRepository.defaultCurrency
             .map { CurrencyProvider.getCurrencyByCode(it) }
