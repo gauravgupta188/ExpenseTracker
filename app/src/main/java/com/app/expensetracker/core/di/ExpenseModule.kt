@@ -1,5 +1,6 @@
 package com.app.expensetracker.core.di
 
+import com.app.expensetracker.feature.expense.data.local.ExpenseDao
 import com.app.expensetracker.feature.expense.data.repository.ExpenseRepositoryImpl
 import com.app.expensetracker.feature.expense.domain.repository.ExpenseRepository
 import com.app.expensetracker.feature.expense.domain.usecase.AddExpenseUseCase
@@ -28,72 +29,59 @@ object ExpenseModule {
     @Singleton
     fun provideExpenseRepository(
         firestore: FirebaseFirestore,
-        auth: FirebaseAuth
+        auth: FirebaseAuth,
+        expenseDao: ExpenseDao              // ← NEW parameter
     ): ExpenseRepository =
-        ExpenseRepositoryImpl(firestore, auth)
+        ExpenseRepositoryImpl(firestore, auth, expenseDao)
 
     @Provides
     @Singleton
-    fun provideGetExpensesByMonthUseCase(
-        repository: ExpenseRepository
-    ) = GetExpensesByMonthUseCase(repository)
+    fun provideGetExpensesByMonthUseCase(repository: ExpenseRepository) =
+        GetExpensesByMonthUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetRecentExpensesByMonthUseCase(
-        repository: ExpenseRepository
-    ) =
+    fun provideGetRecentExpensesByMonthUseCase(repository: ExpenseRepository) =
         GetRecentExpenseByMonthUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideAddExpenseUseCase(
-        repository: ExpenseRepository
-    ): AddExpenseUseCase =
+    fun provideAddExpenseUseCase(repository: ExpenseRepository) =
         AddExpenseUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideUpdateExpenseUseCase(
-        repository: ExpenseRepository
-    ) = UpdateExpenseUseCase(repository)
-
+    fun provideUpdateExpenseUseCase(repository: ExpenseRepository) =
+        UpdateExpenseUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetMonthlySummaryUseCase(
-        repository: ExpenseRepository
-    ) = GetMonthlySummaryUseCase(repository)
+    fun provideGetMonthlySummaryUseCase(repository: ExpenseRepository) =
+        GetMonthlySummaryUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideObserveMonthlyBudgetUseCase(
-        repository: ExpenseRepository
-    ) = ObserveMonthlyBudgetUseCase(repository)
+    fun provideObserveMonthlyBudgetUseCase(repository: ExpenseRepository) =
+        ObserveMonthlyBudgetUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideSaveCategoryBudgetUseCase(
-        repository: ExpenseRepository
-    ) = SaveCategoryBudgetUseCase(repository)
+    fun provideSaveCategoryBudgetUseCase(repository: ExpenseRepository) =
+        SaveCategoryBudgetUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideSaveMonthlyBudgetUseCase(
-        repository: ExpenseRepository
-    ) = SaveMonthlyBudgetUseCase(repository)
+    fun provideSaveMonthlyBudgetUseCase(repository: ExpenseRepository) =
+        SaveMonthlyBudgetUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideDeleteExpenseUseCase(
-        repository: ExpenseRepository
-    ) = DeleteExpenseUseCase(repository)
+    fun provideDeleteExpenseUseCase(repository: ExpenseRepository) =
+        DeleteExpenseUseCase(repository)
 
     @Provides
     @Singleton
-    fun provideGetExpenseByIdUseCase(
-        repository: ExpenseRepository
-    ) = GetExpenseByIdUseCase(repository)
-
-
+    fun provideGetExpenseByIdUseCase(repository: ExpenseRepository) =
+        GetExpenseByIdUseCase(repository)
 }
+

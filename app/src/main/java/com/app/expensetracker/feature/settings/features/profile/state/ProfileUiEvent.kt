@@ -12,7 +12,7 @@ sealed interface ProfileUiEvent {
 
     data object SaveClicked : ProfileUiEvent
 
-    data object LogoutClicked : ProfileUiEvent
+  //  data object LogoutClicked : ProfileUiEvent
 
     data class PhotoSelected(val uri: Uri) : ProfileUiEvent
 }

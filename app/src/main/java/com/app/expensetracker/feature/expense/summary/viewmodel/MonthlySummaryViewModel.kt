@@ -1,14 +1,13 @@
 package com.app.expensetracker.feature.expense.summary.viewmodel
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.app.expensetracker.core.currency.CurrencyManager
+import com.app.expensetracker.core.utils.AppLogger
 import com.app.expensetracker.feature.expense.domain.model.ExpenseCategory
 import com.app.expensetracker.feature.expense.domain.model.SummaryAggregate
 import com.app.expensetracker.feature.expense.domain.model.YearMonthUiModel
 import com.app.expensetracker.feature.expense.domain.usecase.GetExpensesByMonthUseCase
-import com.app.expensetracker.feature.expense.domain.usecase.GetMonthlySummaryUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.ObserveMonthlyBudgetUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.SaveCategoryBudgetUseCase
 import com.app.expensetracker.feature.expense.domain.usecase.SaveMonthlyBudgetUseCase
@@ -18,8 +17,6 @@ import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiEven
 import com.app.expensetracker.feature.expense.summary.state.MonthlySummaryUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import javax.inject.Inject
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -29,7 +26,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlin.collections.orEmpty
+import javax.inject.Inject
 
 @HiltViewModel
 class MonthlySummaryViewModel @Inject constructor(
@@ -81,13 +78,13 @@ class MonthlySummaryViewModel @Inject constructor(
             is MonthlySummaryUiEvent.OnSaveBudget -> {
 
                 saveMonthlyBudget(event.amount)
-                 _uiState.update {
-                     it.copy(
-                         monthlyBudget = event.amount,
-                         isLoading = false,
-                         errorMessage = null
-                     )
-                 }
+                _uiState.update {
+                    it.copy(
+                        monthlyBudget = event.amount,
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                }
             }
 
             MonthlySummaryUiEvent.BudgetEditClicked -> {
@@ -138,20 +135,21 @@ class MonthlySummaryViewModel @Inject constructor(
         amount: Double
     ) {
         viewModelScope.launch {
-            try {saveCategoryBudget(
-                year = uiState.value.selectedMonth.year,
-                month = uiState.value.selectedMonth.month,
-                category = category,
-                amount = amount
-            )
-
-            _uiState.update {
-                it.copy(
-                    editingCategory = null,
-                    showCategoryBudgetSheet = false
+            try {
+                saveCategoryBudget(
+                    year = uiState.value.selectedMonth.year,
+                    month = uiState.value.selectedMonth.month,
+                    category = category,
+                    amount = amount
                 )
-            }
-        }catch (e: Exception) {
+
+                _uiState.update {
+                    it.copy(
+                        editingCategory = null,
+                        showCategoryBudgetSheet = false
+                    )
+                }
+            } catch (e: Exception) {
                 emitEffect(
                     MonthlySummaryUiEffect.ShowError(
                         "Failed to save budget"
@@ -192,16 +190,16 @@ class MonthlySummaryViewModel @Inject constructor(
                     it.copy(showMonthlyBudgetSheet = false)
                 }
 
-            }catch (e: Exception){
+            } catch (e: Exception) {
 
             }
         }
     }
 
     @OptIn(ExperimentalCoroutinesApi::class)
-     fun observeSummaryData(monthFlow: StateFlow<YearMonthUiModel>) {
+    fun observeSummaryData(monthFlow: StateFlow<YearMonthUiModel>) {
         monthFlow.flatMapLatest { month ->
-Log.d("TAG", "observeSummaryData: $month")
+            AppLogger.d("TAG", "observeSummaryData: $month")
 
             combine(
                 getExpenseByMonth(

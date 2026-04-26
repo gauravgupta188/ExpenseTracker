@@ -50,8 +50,8 @@ class ProfileViewModel @Inject constructor(
             ProfileUiEvent.SaveClicked ->
                 saveProfile()
 
-            ProfileUiEvent.LogoutClicked ->
-                logout()
+          /*  ProfileUiEvent.LogoutClicked ->
+                logout()*/
 
             is ProfileUiEvent.PhotoSelected -> {
                 uploadPhoto(event.uri)
@@ -115,12 +115,12 @@ class ProfileViewModel @Inject constructor(
         }
     }
 
-    private fun logout() {
+  /*  private fun logout() {
         viewModelScope.launch {
             authRepository.logout()
             emitEffect(ProfileUiEffect.LogoutSuccess)
         }
-    }
+    }*/
 
     private fun emitEffect(effect: ProfileUiEffect) {
         viewModelScope.launch {

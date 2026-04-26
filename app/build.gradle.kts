@@ -31,7 +31,7 @@ android {
     }
 
     buildTypes {
-        debug {            // Ensure this is set to false
+        debug {
             isMinifyEnabled = false
         }
         release {
@@ -42,6 +42,11 @@ android {
             )
         }
     }
+    buildFeatures {
+        compose = true
+        buildConfig = true
+    }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17

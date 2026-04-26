@@ -17,6 +17,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.app.expensetracker.core.ui.theme.SplashScreen
+import com.app.expensetracker.core.utils.AppLogger
 import com.app.expensetracker.feature.auth.login.ui.LoginScreen
 import com.app.expensetracker.feature.auth.login.viewmodel.LoginViewModel
 import com.app.expensetracker.feature.auth.register.ui.RegisterScreen
@@ -180,9 +181,9 @@ fun AppNavGraph(
                 val selectedMonthFlow = appDateViewModel.selectedMonth
 
                 val viewModel: DashboardViewModel = hiltViewModel()
-                LaunchedEffect(Unit) {
+              /*  LaunchedEffect(Unit) {
                     viewModel.observeDashboardData(selectedMonthFlow)
-                }
+                }*/
 
 
                 DashboardScreen(
@@ -213,12 +214,12 @@ fun AppNavGraph(
 
                             ExpenseUiEffect.NavigateToAllCategories -> {
                                 val month = appDateState.selectedMonth
-                                Log.d("MOnth", month.toString())
+                                AppLogger.d("MOnth", month.toString())
                                 val route = Routes.MonthlySummary.routeWithMonth(
                                     year = month.year,
                                     month = month.month
                                 )
-                                Log.d("Route", route)
+                                AppLogger.d("Route", route)
                                 navController.navigate(
                                     Routes.MonthlySummary.routeWithMonth(
                                         year = month.year,
@@ -453,9 +454,8 @@ fun AppNavGraph(
             LaunchedEffect(Unit) {
                 viewModel.uiEffect.collect { effect ->
                     when (effect) {
-                        ProfileUiEffect.LogoutSuccess -> TODO()
                         ProfileUiEffect.NavigateBack ->  navController.popBackStack()
-                        is ProfileUiEffect.ShowError -> TODO()
+                        is ProfileUiEffect.ShowError -> {}
                     }
                 }
             }
