@@ -13,7 +13,7 @@ pipeline {
 
         stage('Checkout') {
             steps {
-                git branch: 'main',
+                git branch: 'master',
                     credentialsId: 'github-ssh-key',
                     url: 'https://github.com/gauravgupta188/ExpenseTracker.git'
             }
